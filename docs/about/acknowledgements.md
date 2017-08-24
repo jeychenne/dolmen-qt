@@ -18,6 +18,9 @@ Dolmen uses the following open source libraries/projects:
 - sol2, developed by Rapptz, ThePhD and contributors (MIT), see [sol2.rtfd.io](http://sol2.rtfd.io)
 - mkdocs, developed by Tom Christie (BSD), see [mkdocs.org](http://www.mkdocs.org)
 - icons from [icons8.com](https://icons8.com) (Creative Commons Attribution-NoDerivs 3.0 Unported).
+- utf8proc, developed by the Public Software Group (MIT), see [julialang.org/utf8proc](https://julialang.org/utf8proc)
+- onigmo, developed by K.Takata and K.Kosako (BSD), see [github.com/k-takata/Onigmo](https://github.com/k-takata/Onigmo)
+
 
 
 The development of search grammars has been supported by the Japanese Society for the Promotion of Science (JSPS), Grant-in-Aid for Scientific Research (B) n°23320121 (2011-2014). Project title: <i>A corpus-based longitudinal study of the interphonological features of Japanese learners of French</i>.
