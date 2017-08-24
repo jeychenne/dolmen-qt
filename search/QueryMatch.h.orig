@@ -1,0 +1,83 @@
+/*
+ * QueryMatch.h
+ *
+ * Copyright (C) 2010-2012 Julien Eychenne 
+ *
+ * This file is part of Dolmen.
+ *
+ * Dolmen is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as
+ * published by the Free Software Foundation, either version 2.1 of the
+ * License, or (at your option) any later version.
+ *
+ * Dolmen is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Dolmen. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author:  Julien Eychenne
+ * Purpose: implement query matches in queries
+ * Created: 21/09/2010
+ */
+
+#ifndef QUERYMATCH_H
+#define QUERYMATCH_H
+
+#include <QObject>
+
+#include "dolmen.h"
+#include "lib/DFile.h"
+#include "lib/Annotation.h"
+#include "lib/Item.h"
+#include "lib/Bookmark.h"
+#include "utils/routines.h"
+
+
+
+
+class QueryMatch : public QObject, public Bookmark
+{
+	Q_OBJECT
+	Q_INTERFACES(Bookmark)
+
+public:
+	QueryMatch(DFile *file, Item* item, int tier, double match);
+	QueryMatch(DFile *file, Item* item, int tier, QString match, QString left = "", QString right = "");
+	bool operator< (const QueryMatch &qm) const;
+	QString toHtml() const;
+	QString toString() const;
+	QString left() const;
+	QString right() const;
+	QString match() const;
+	DFile* file() const;
+	Item* item() const;
+	// Base 0 is used internally. Base 1 is user-visible (as used in Praat).
+	int tier0() const; // zero-based
+	int tier() const; // one-based
+	void setTier0(int tier); // zero-based
+	void setTier(int tier); // One-based
+
+	/* Bookmark */
+	bool readFromXml(QXmlStreamReader *reader);
+	void writeToXml(QXmlStreamWriter *writer);
+	QString type() const;
+	void open();
+	QString tooltip() const;
+
+signals:
+	void openDFile(DFile *df, double start, double end);
+
+private:
+	QString m_match, m_left, m_right;
+	DFile *m_dfile;
+    Item *matchedItem;
+	int m_tier;
+
+};
+
+bool queryMatchPrecedes(const QueryMatch &qm1, const QueryMatch &qm2);
+
+#endif // QUERYMATCH_H

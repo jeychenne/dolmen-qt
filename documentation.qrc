@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/">
+        <file>html/about/acknowledgements/index.html</file>
+        <file>html/about/license/index.html</file>
+        <file>html/about/release-notes/index.html</file>
+        <file>html/css/base.css</file>
+        <file>html/css/bootstrap-custom.min.css</file>
+        <file>html/css/dolmen.css</file>
+        <file>html/css/highlight.css</file>
+        <file>html/fonts/fontawesome-webfont.eot</file>
+        <file>html/fonts/fontawesome-webfont.svg</file>
+        <file>html/fonts/fontawesome-webfont.ttf</file>
+        <file>html/fonts/fontawesome-webfont.woff</file>
+        <file>html/img/favicon.ico</file>
+        <file>html/js/base.js</file>
+        <file>html/js/bootstrap-3.0.3.min.js</file>
+        <file>html/js/highlight.pack.js</file>
+        <file>html/js/jquery-1.10.2.min.js</file>
+        <file>html/mkdocs/js/lunr.min.js</file>
+        <file>html/mkdocs/js/mustache.min.js</file>
+        <file>html/mkdocs/js/require.js</file>
+        <file>html/mkdocs/js/search-results-template.mustache</file>
+        <file>html/mkdocs/js/search.js</file>
+        <file>html/mkdocs/js/text.js</file>
+        <file>html/mkdocs/search_index.json</file>
+        <file>html/scripting/api/regex/index.html</file>
+        <file>html/scripting/api/signal/index.html</file>
+        <file>html/scripting/api/string/index.html</file>
+        <file>html/scripting/overview/index.html</file>
+        <file>html/scripting/plugins/index.html</file>
+        <file>html/index.html</file>
+        <file>html/sitemap.xml</file>
+        <file>html/css/font-awesome-4.5.0.css</file>
+        <file>html/fonts/fontawesome-webfont.woff2</file>
+        <file>html/fonts/glyphicons-halflings-regular.eot</file>
+        <file>html/fonts/glyphicons-halflings-regular.svg</file>
+        <file>html/fonts/glyphicons-halflings-regular.ttf</file>
+        <file>html/fonts/glyphicons-halflings-regular.woff</file>
+        <file>html/fonts/glyphicons-halflings-regular.woff2</file>
+        <file>html/img/grid.png</file>
+        <file>html/scripting/api/shell/index.html</file>
+        <file>html/404.html</file>
+        <file>html/dolmen_manual.doc</file>
+    </qresource>
+</RCC>

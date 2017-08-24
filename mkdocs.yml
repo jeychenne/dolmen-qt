@@ -1,0 +1,27 @@
+site_name: Dolmen
+use_directory_urls: false
+
+pages:
+- Getting started: index.md
+
+- Scripting:
+    - Overview: scripting/overview.md
+    - Plugins: scripting/plugins.md
+    - Modules:
+        - String manipulation: scripting/api/string.md
+        - Regular expressions: scripting/api/regex.md
+        - Event handling: scripting/api/signal.md
+        - User interface: scripting/api/shell.md
+    
+- About: 
+    - Release notes: about/release-notes.md
+    - License: about/license.md
+    - Acknowledgements: about/acknowledgements.md
+
+extra_css:
+    - css/dolmen.css
+    
+site_dir: html
+
+#theme: cosmo
+copyright: Copyright &copy; 2010-2017 Julien Eychenne. 

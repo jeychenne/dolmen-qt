@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# first run qtmacdeploy to copy the frameworks, then run this script to fix the paths
+
+SRCDIR="$HOME/Devel/dolmen"
+LIBDIR="$HOME/Devel/dmdynlibs"
+OUTDIR="$HOME/Devel/build-dolmen-Desktop_Qt_5_1_0_clang_64bit-Release"
+RESOURCES="$OUTDIR/Dolmen.app/Contents/Resources"
+FRAMEWORKS="$OUTDIR/Dolmen.app/Contents/Frameworks"
+
+cd $OUTDIR
+
+#cp -rf $SRCDIR/qt_menu.nib $RESOURCES/
+#cp -r $LIBDIR $FRAMEWORKS
+
+# otool -L to check the dependencies of the executable
+
+OLDLIB="/Users/julien/Qt5.1.0//5.1.0/clang_64/lib"
+NEWLIB="@executable_path/../Frameworks"
+BIN="Dolmen.app/Contents/MacOS/Dolmen"
+
+QTWIDGETS="QtWidgets.framework/Versions/5/QtWidgets"
+QTCORE="QtCore.framework/Versions/5/QtCore"
+QTSVG="QtSvg.framework/Versions/5/QtSvg"
+QTGUI="QtGui.framework/Versions/5/QtGui"
+QTSQL="QtSql.framework/Versions/5/QtSql"
+QTSCRIPT="QtScript.framework/Versions/5/QtScript"
+QTPRINT="QtPrintSupport.framework/Versions/5/QtPrintSupport"
+QTXML="QtXml.framework/Versions/5/QtXml"
+
+# $1 : framework
+# $2 : binary
+function change_name {
+	install_name_tool -change $OLDLIB/$1 $NEWLIB/$1 $2
+}
+
+# $1 : framework
+function change_lib {
+	install_name_tool -id $NEWLIB/$1 $FRAMEWORKS/$1
+}
+
+
+# change framework paths
+for F in $QTWIDGETS $QTCORE $QTSVG $QTGUI $QTSQL $QTSCRIPT
+do
+	change_name $F $BIN
+done
+	
+# change paths inside frameworks
+change_lib $QTCORE
+change_lib $QTWIDGETS
+change_lib $QTGUI
+change_lib $QTPRINT
+change_name $QTSCRIPT
+change_name $QTSQL
+change_name $QTSVG
+change_name $QTXML
+
+echo "done"; echo
