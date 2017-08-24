@@ -23,6 +23,7 @@
 #include <locale>
 
 #ifdef _WIN32
+    #include <windows.h>
 	#include <wchar.h>
 #else
     #include <errno.h>
@@ -32,7 +33,7 @@
 
 #include "helpers.h"
 
-#if Q_OS_WINDOWS
+#ifdef Q_OS_WIN
 #include "runtime/unicode.hpp"
 using namespace runtime;
 using namespace runtime::unicode;
@@ -44,8 +45,8 @@ FILE *open_file(const std::string &path, const char *mode)
 {
 	FILE *handle;
 
-#ifdef WIN32
-    std::u16string wpath(utf8_to_utf16(path));
+#ifdef Q_OS_WIN
+    std::u16string wpath(utf8_to_utf16(path.data()));
     std::u16string wmode(utf8_to_utf16(mode));
 	auto wpath_data = reinterpret_cast<const wchar_t*>(wpath.data());
 	auto wmode_data = reinterpret_cast<const wchar_t*>(wmode.data());
@@ -67,8 +68,8 @@ FILE *open_file(const std::string &path, const char *mode)
 FILE *reopen_file(const std::string &path, const char *mode, FILE *handle)
 {
 #ifdef WIN32
-    std::u16string wpath(utf8_to_utf16(path));
-    std::u16string wmode(utf8_to_utf16(mode));
+    std::u16string wpath(utf8_to_utf16(path.data()));
+    std::u16string wmode(utf8_to_utf16(mode).data());
 	auto wpath_data = reinterpret_cast<const wchar_t*>(wpath.data());
 	auto wmode_data = reinterpret_cast<const wchar_t*>(wmode.data());
 	handle = _wfreopen(wpath_data, wmode_data, handle);
@@ -88,7 +89,7 @@ FILE *reopen_file(const std::string &path, const char *mode, FILE *handle)
 
 QString error_message()
 {
-#ifdef Q_OS_WINDOWS
+#ifdef Q_OS_WIN
 	DWORD err = GetLastError();
 	LPTSTR msg = NULL;
 
@@ -104,13 +105,13 @@ QString error_message()
 	if (msg != NULL)
 	{
 		std::u16string utf16((char16_t*)msg, wcslen(msg));
-        String s = utf16_to_utf8(utf16);
+        std::string s = utf16_to_utf8(utf16);
 		LocalFree((HLOCAL)msg);
 
-		return s;
+        return s.data();
 	}
 	else {
-		return String();
+        return QString();
 	}
 #else
 	return strerror(errno);
@@ -119,9 +120,8 @@ QString error_message()
 
 static void print_string(FILE *file, const char *ln)
 {
-#ifdef Q_OS_WINDOWS
-	String line(ln);
-    auto utf16 = utf8_to_utf16(line);
+#ifdef Q_OS_WIN
+    auto utf16 = utf8_to_utf16(ln);
 	fwprintf(file, L"%s", (wchar_t*)utf16.data());
 #else
 	fprintf(file, "%s", ln);

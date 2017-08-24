@@ -39,7 +39,7 @@
 #include <QTime>
 #include <QProgressDialog>
 #include <QProcess>
-
+//#include <QtPlugin>
 #include "lib/Project.h"
 #include "lib/Plugin.h"
 #include "lib/SqlDatabase.h"
@@ -64,8 +64,9 @@
 #include "gui/AnnotationView.h"
 #include "runtime/PluginHandler.h"
 
-
-
+//#ifdef Q_OS_WIN
+//Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+//#endif
 
 class DolmenApp : public QMainWindow
 {

@@ -6,7 +6,8 @@
 
 QT += core gui sql svg widgets # webkitwidgets
 
-QMAKE_CXXFLAGS += -std=c++14
+#QMAKE_CXXFLAGS += -std=c++14
+CONFIG += c++14
 
 TEMPLATE = app
 DEFINES += USE_QT5
@@ -14,7 +15,7 @@ DEFINES += USE_QT5
 # Enable C++ mode and safety checks for Lua in sol. The C++ mode ensures that Lua errors are propagated as C++ exceptions.
 DEFINES += SOL_CHECK_ARGUMENTS SOL_SAFE_USERTYPE SOL_SAFE_FUNCTIONS SOL_USING_CXX_LUA
 
-INCLUDEPATH += extra/onigmo extra/onigmo/enc/unicode
+INCLUDEPATH += extra/onigmo extra/onigmo/enc/unicode extra/lua
 
 macx {
     #Qt 5 stuff
@@ -47,14 +48,14 @@ macx {
 }
 
 
-win32-g++|win32-msvc2010 {
+win32-g++|win32-msvc2017 {
 
-LIBS += -LC:/Qt/Qt5.6.0/5.6/mingw49_32/plugins/sqldrivers -lqsqlite
+#LIBS += -LC:/Qt/Qt5.6.0/5.6/mingw49_32/plugins/sqldrivers -lqsqlite
 
 CONFIG += exceptions
-INCLUDEPATH += C:/build/dolmen D:/Lib/qwt-6.1.2/src D:/Lib/libsndfile/include D:/Lib/rtaudio/include D:/Lib/libspeex/include
-LIBS += -lws2_32 -lwinmm -lole32 -LD:/Lib/libsndfile/lib -llibsndfile-1 -ldsound -LD:/Lib/libspeex/lib -llibspeexdsp -LD:/Lib/qwt-6.1.2/lib -lqwt
-LIBS += -LD:/Lib/zlib/lib -lz.dll
+INCLUDEPATH += C:/Lib/include C:/Lib/libsndfile/include C:/Lib/rtaudio/include C:/Lib/libspeex/include
+LIBS += -lws2_32 -lwinmm -lole32 -LC:/Lib/libsndfile/lib -llibsndfile-1 -ldsound -LC:/Lib/libspeex/lib -llibspeexdsp -LC:/Lib/qwt -lqwt
+LIBS += -LC:/Lib/zlib/lib -lz.dll
 DEFINES += __WINDOWS_DS__ WINDOWS
 #DEFINES += QWT_DLL
 }
@@ -297,7 +298,6 @@ SOURCES += main.cpp\
 	runtime/regex.cpp \
     gui/ElementBrowser.cpp \
     lib/BrowserElement.cpp \
-    zip/qzip.cpp \
 	extra/utf8proc/utf8proc_data.c \
 	runtime/PluginHandler.cpp
 
@@ -471,15 +471,12 @@ HEADERS  += \
     extra/onigmo/config_linux.h \
     extra/quazip/zconf.h \
     extra/quazip/zlib.h \
-    zip/qzipreader_p.h \
-	zip/qzipwriter_p.h \
 	runtime/PluginHandler.h \
 	include/load_plugins_lua.hpp \
 	include/signal_lua.hpp
 
 RESOURCES += \
-    icons.qrc \
-    documentation.qrc
+    icons.qrc
 
 RC_FILE = dolmen.rc
 
