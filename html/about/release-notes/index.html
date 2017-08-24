@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Release notes - Dolmen</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <link href="../../css/dolmen.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../index.html">Dolmen</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="../../index.html">Getting started</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scripting <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../scripting/overview/index.html">Overview</a>
+</li>
+                            
+<li >
+    <a href="../../scripting/plugins/index.html">Plugins</a>
+</li>
+                            
+  <li class="dropdown-submenu">
+    <a href="#">Modules</a>
+    <ul class="dropdown-menu">
+            
+<li >
+    <a href="../../scripting/api/string/index.html">String manipulation</a>
+</li>
+            
+<li >
+    <a href="../../scripting/api/regex/index.html">Regular expressions</a>
+</li>
+            
+<li >
+    <a href="../../scripting/api/signal/index.html">Event handling</a>
+</li>
+            
+<li >
+    <a href="../../scripting/api/shell/index.html">User interface</a>
+</li>
+    </ul>
+  </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li class="active">
+    <a href="index.html">Release notes</a>
+</li>
+                            
+<li >
+    <a href="../license/index.html">License</a>
+</li>
+                            
+<li >
+    <a href="../acknowledgements/index.html">Acknowledgements</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../../scripting/api/shell/index.html">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../license/index.html">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#changelog-for-dolmen">Changelog for Dolmen</a></li>
+            <li><a href="#version-19-2017">Version 1.9 (??/?/2017)</a></li>
+            <li><a href="#version-133-2452016">Version 1.3.3 (24/5/2016)</a></li>
+            <li><a href="#version-132-852016">Version 1.3.2 (8/5/2016)</a></li>
+            <li><a href="#version-131-28042016">Version 1.3.1 (28/04/2016)</a></li>
+            <li><a href="#version-13-1292014">Version 1.3 (12/9/2014)</a></li>
+            <li><a href="#version-12-192013">Version 1.2 (1/9/2013)</a></li>
+            <li><a href="#version-11-172013">Version 1.1 (1/7/2013)</a></li>
+            <li><a href="#version-104-21022013">Version 1.0.4 (21/02/2013)</a></li>
+            <li><a href="#version-103-16022013">Version 1.0.3 (16/02/2013)</a></li>
+            <li><a href="#version-102-15022013">Version 1.0.2 (15/02/2013)</a></li>
+            <li><a href="#version-101-16122012">Version 1.0.1 (16/12/2012)</a></li>
+            <li><a href="#version-10-15122012">Version 1.0 (15/12/2012)</a></li>
+            <li><a href="#version-099-21102012">Version 0.9.9 (21/10/2012)</a></li>
+            <li><a href="#version-098-18102012">Version 0.9.8 (18/10/2012)</a></li>
+            <li><a href="#version-0972-04052012">Version 0.9.7.2 (04/05/2012)</a></li>
+            <li><a href="#version-097-23042012">Version 0.9.7 (23/04/2012)</a></li>
+            <li><a href="#version-096-14042012">Version 0.9.6 (14/04/2012)</a></li>
+            <li><a href="#version-095-08042012">Version 0.9.5 (08/04/2012)</a></li>
+            <li><a href="#version-094-03032012">Version 0.9.4 (03/03/2012)</a></li>
+            <li><a href="#version-093-02032012">Version 0.9.3 (02/03/2012)</a></li>
+            <li><a href="#version-092-28012012">Version 0.9.2 (28/01/2012)</a></li>
+            <li><a href="#version-091-21082011">Version 0.9.1 (21/08/2011)</a></li>
+            <li><a href="#version-090-19082011">Version 0.9.0 (19/08/2011)</a></li>
+            <li><a href="#version-083-08082011">Version 0.8.3 (08/08/2011)</a></li>
+            <li><a href="#version-082-06082011">Version 0.8.2 (06/08/2011)</a></li>
+            <li><a href="#version-081-23072011">Version 0.8.1 (23/07/2011)</a></li>
+            <li><a href="#version-080-16072011">Version 0.8.0   (16/07/2011)</a></li>
+            <li><a href="#version-072-20032011">Version 0.7.2 (20/03/2011)</a></li>
+            <li><a href="#version-071-05032011">Version 0.7.1 (05/03/2011)</a></li>
+            <li><a href="#version-070-04032011">Version 0.7.0 (04/03/2011)</a></li>
+            <li><a href="#version-065-19022011">Version 0.6.5 (19/02/2011)</a></li>
+            <li><a href="#version-064-12022011">Version 0.6.4 (12/02/2011)</a></li>
+            <li><a href="#version-063-09022011">Version 0.6.3 (09/02/2011)</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="changelog-for-dolmen">Changelog for Dolmen</h2>
+<h3 id="version-19-2017">Version 1.9 (??/?/2017)</h3>
+<ul>
+<li>Small changes in the user interface</li>
+<li>lua scripting engine</li>
+<li>New regular expression engine</li>
+<li>New documentation</li>
+<li>Removed obsolete UNIX pattern search syntax</li>
+<li>Fixed freeze with open/save dialogs on Linux (Qt5)</li>
+<li>Added Conc menu</li>
+<li>Auto-detection of Unicode encoding (defaults to UTF-8 if no BOM is present)</li>
+<li>Metadata panel can now be resized</li>
+<li>Removed greedy search check box (use quantifiers in regular expressions instead)</li>
+<li>Bookmarks can now be opened in Praat</li>
+<li>Fixed bug which caused the content of an annotation to be loaded multiple times when there were bookmarks in a project</li>
+<li>Fixed crash which occurred when switching between projects</li>
+<li>Fixed minor memory leak (finalization of grammars)</li>
+<li>License is now GPL version 3, with an exception for plugins</li>
+<li>New icon theme (courtesy <a href="https://icons8.com">icons8.com</a>)</li>
+<li>Replaced output tab with a (hideable) status bar</li>
+</ul>
+<h3 id="version-133-2452016">Version 1.3.3 (24/5/2016)</h3>
+<ul>
+<li>fixed encoding when exporting search results to CSV</li>
+<li>minor bug fixes</li>
+</ul>
+<h3 id="version-132-852016">Version 1.3.2 (8/5/2016)</h3>
+<ul>
+<li>minor bug fixes</li>
+</ul>
+<h3 id="version-131-28042016">Version 1.3.1 (28/04/2016)</h3>
+<ul>
+<li>query results are now sorted</li>
+</ul>
+<h3 id="version-13-1292014">Version 1.3 (12/9/2014)</h3>
+<ul>
+<li>fixed bug in sound playing on Windows and Linux</li>
+<li>import metadata from CSV file</li>
+<li>fixed a bug introduced in version 1.2 that made Dolmen crash when loading a project that contains bookmarks</li>
+<li>now built on top of Qt5</li>
+<li>better compatibility with recent version of Mac OS X (now requires 10.7 or later)</li>
+<li>plugin tabs are no longer displayed in random order</li>
+<li>updated RtAudio to version 4.1.1</li>
+<li>minor fixes and improvements</li>
+</ul>
+<h3 id="version-12-192013">Version 1.2 (1/9/2013)</h3>
+<ul>
+<li>improvements to sound and annotation views</li>
+<li>sound can be browsed with keyboard arrows in sound and annotation views</li>
+<li>faster loading of projects (annotations are now opened lazily)</li>
+<li>updated RtAudio to version 4.0.12</li>
+<li>RtAudio and libsndfile versions are now displayed in Help &gt; Sound information</li>
+<li>the source code can now be compiled with Qt4 or Qt5</li>
+<li>search by tier name now uses regular expressions instead of string comparison</li>
+<li>search grammars can now define a "tier selecting" field to search a pattern across different tiers</li>
+<li>fixed compiler warnings</li>
+<li>minor fixes and enhancements</li>
+</ul>
+<h3 id="version-11-172013">Version 1.1 (1/7/2013)</h3>
+<ul>
+<li>updated code to use Qwt 6.1 to prepare the transition to Qt 5 (Qwt is no longer included and must be provided externally)</li>
+<li>sound can now be played/paused with the space bar and stopped with Esc in sound and annotation views</li>
+<li>plots are now antialiased by default (this can be turned off in the preference editor)</li>
+<li>minor code clean-up's</li>
+<li>new icon</li>
+</ul>
+<h3 id="version-104-21022013">Version 1.0.4 (21/02/2013)</h3>
+<ul>
+<li>Windows only: added msvcp100.dll, for systems that don’t have it.</li>
+</ul>
+<h3 id="version-103-16022013">Version 1.0.3 (16/02/2013)</h3>
+<ul>
+<li>prevent Dolmen from crashing when displaying a short sound file in a view</li>
+</ul>
+<h3 id="version-102-15022013">Version 1.0.2 (15/02/2013)</h3>
+<ul>
+<li>Fixes audio playback of stereo files on Windows and Linux</li>
+</ul>
+<h3 id="version-101-16122012">Version 1.0.1 (16/12/2012)</h3>
+<ul>
+<li>fixed a bug that happened when opening intervals shorter than 100 ms in Praat</li>
+<li>the tier name fied is now properly hidden in the search window when the files are Documents</li>
+</ul>
+<h3 id="version-10-15122012">Version 1.0 (15/12/2012)</h3>
+<ul>
+<li>annotator comparison for search grammars (requires an "Annotator" property)</li>
+<li>Search by tier name instead of tier number</li>
+<li>code modified so that it compiles with MSVC2010</li>
+<li>updated libsndfile to 1.0.25 on Windows</li>
+</ul>
+<h3 id="version-099-21102012">Version 0.9.9 (21/10/2012)</h3>
+<ul>
+<li>Qwt is no longer required as an external dependency (v5.2.2 has been included in Dolmen's source code)</li>
+<li>updated Qt to v 4.8.3 on Windows </li>
+</ul>
+<h3 id="version-098-18102012">Version 0.9.8 (18/10/2012)</h3>
+<ul>
+<li>improved sound playback on Mac OS X and Linux (updated RTAudio to v 4.0.11)</li>
+<li>fixed selection rectangle in waveforms on Linux</li>
+<li>updated Qt to v 4.8.3 on Mac OS X</li>
+<li>refactoring of the output console</li>
+</ul>
+<h3 id="version-0972-04052012">Version 0.9.7.2 (04/05/2012)</h3>
+<ul>
+<li>fixed a deployment bug on Windows (SQL plugin)</li>
+<li>error message if the database fails to open</li>
+</ul>
+<h3 id="version-097-23042012">Version 0.9.7 (23/04/2012)</h3>
+<ul>
+<li>data tables (DMT files). Data tables can be created from a query view (right click on a query match &gt; Create table view)</li>
+<li>option for greedy search in the main search window</li>
+<li>minor improvements and bug fixes</li>
+</ul>
+<h3 id="version-096-14042012">Version 0.9.6 (14/04/2012)</h3>
+<ul>
+<li>support for user-defined plugins (written in JavaScript/JSON)</li>
+<li>cleaner check list boxes (mostly used in search window and gauge tool)</li>
+<li>disabled internal debug messages</li>
+</ul>
+<h3 id="version-095-08042012">Version 0.9.5 (08/04/2012)</h3>
+<p>This version brings a significant number of changes and improvements:
+<em> metadata is now displayed in a permanent widget on the right-hand side.
+</em> metadata is now stored in an SQLite database instead of DMM files
+<em> tags have been renamed to "properties".
+</em> redesigned property editor which makes editing properties much simpler
+<em> on Mac, the application data folder has been moved from “~/Library” to “~/Application Support”
+</em> resampling now uses speex instead of libsamplerate
+<em> support for Document files (plain text files) along with Annotations
+</em> bug fixes and usability improvements</p>
+<h3 id="version-094-03032012">Version 0.9.4 (03/03/2012)</h3>
+<ul>
+<li>prevent a crash when using the arrow keys in a query view</li>
+<li>tags are now properly refreshed in the metadata editor</li>
+</ul>
+<h3 id="version-093-02032012">Version 0.9.3 (02/03/2012)</h3>
+<ul>
+<li>fixes bugs in regular expression and plain text search</li>
+<li>prevent Dolmen from crashing when playing a new search match while the previous one hasn’t finished playing</li>
+<li>search results can now be browsed using keyboard arrows</li>
+</ul>
+<h3 id="version-092-28012012">Version 0.9.2 (28/01/2012)</h3>
+<ul>
+<li>new version (mac only): fixes a crash when playing a sound </li>
+<li>updated RTAudio to 4.0.10</li>
+<li>the Mac version is now linked against Qt 4.8</li>
+</ul>
+<h3 id="version-091-21082011">Version 0.9.1 (21/08/2011)</h3>
+<ul>
+<li>fixed a bug that made Dolmen crash when loading a new project if the previous one had bookmarks</li>
+<li>added icons for surveys and speakers in the file browser</li>
+<li>items can now be edited from query views (right click, then "Edit item text...")</li>
+<li>the Linux version is now distributed as Debian packages (Debian stable)</li>
+<li>minor bug fixes and improvements</li>
+</ul>
+<h3 id="version-090-19082011">Version 0.9.0 (19/08/2011)</h3>
+<ul>
+<li>implementation of tiers in annotation views (can read and edit text of Praat tiers) </li>
+<li>much smoother scrolling of waveform</li>
+<li>waveforms can now be scrolled with the mouse wheel</li>
+<li>new metadata editor, available from annotation and sound views, as well as from the file browser (right click on an item)</li>
+<li>new shortcuts to hide the left sidebar (ctrl+shift+L) and the bottom tabs (ctrl+shift+b)</li>
+<li>updated support for Praat point tiers (if you have old files with points, it is best to open and resave them in Praat)</li>
+<li>minor improvements to the side bar on Mac OS X</li>
+</ul>
+<h3 id="version-083-08082011">Version 0.8.3 (08/08/2011)</h3>
+<ul>
+<li>Sound views now indicate the current position while a file is playing</li>
+<li>Removed Webkit dependency</li>
+<li>The Mac version is now built statically and is much smaller as a result</li>
+</ul>
+<h3 id="version-082-06082011">Version 0.8.2 (06/08/2011)</h3>
+<ul>
+<li>Sound can now be paused in sound views</li>
+<li>Improved audio output of mono files on Mac OS X</li>
+</ul>
+<h3 id="version-081-23072011">Version 0.8.1 (23/07/2011)</h3>
+<ul>
+<li>Fixed a bug that caused Dolmen to crash on Mac and Linux when playing a sound file containing non-ASCII characters in its path</li>
+<li>Fixed a bug that caused Dolmen to freeze on Windows when interrupting playing</li>
+</ul>
+<h3 id="version-080-16072011">Version 0.8.0   (16/07/2011)</h3>
+<ul>
+<li>the sound stack has been rewritten and now uses libsndfile and RTAudio instead of libsox. </li>
+<li>initial support for waveforms in sound and annotation views (mono files)</li>
+<li>new tool "Compare speakers or subjects..."</li>
+<li>export to CSV (spreadsheet format)</li>
+<li>bookmarks</li>
+<li>open files in Praat from the file browser</li>
+<li>new command "save project as..." </li>
+<li>the system tab "metadata" has been removed (metadata is now shown in tool tips in the file browser or in the viewer when opening a file)</li>
+<li>simplified search window</li>
+</ul>
+<h3 id="version-072-20032011">Version 0.7.2 (20/03/2011)</h3>
+<ul>
+<li>fixed display of results in query view when hovering the mouse cursor over items</li>
+<li>better Linux support</li>
+</ul>
+<h3 id="version-071-05032011">Version 0.7.1 (05/03/2011)</h3>
+<ul>
+<li>read WaveSurfer label files (*.lab)</li>
+<li>export tiers of DMF files to TextGrid</li>
+<li>TextGrid files that contain text fields spanning over several lines are now properly parsed </li>
+</ul>
+<h3 id="version-070-04032011">Version 0.7.0 (04/03/2011)</h3>
+<p>This version brings many improvements across the board:</p>
+<ul>
+<li>sendpraat and sox have been included in the source code and are no longer neeeded as external dependencies</li>
+<li>cross-tier search</li>
+<li>the preference editor has been simplified and reorganized</li>
+<li>HTML rendering now uses the WebKit engine</li>
+<li>the documentation has been overhauled and is now available in HTML from within Dolmen, instead of a PDF file. </li>
+<li>many more sound file formats are supported out of the box (still no MP3 nor OGG though)</li>
+<li>the most recent project can now be opened with ctrl+shift+o</li>
+<li>minor bug fixes</li>
+</ul>
+<h3 id="version-065-19022011">Version 0.6.5 (19/02/2011)</h3>
+<p>Features:         <br />
+<em> added project versioning (Edit &gt; Project Properties...)
+</em> can now open TextGrid without sound in Praat
+<em> added search variables %LINE, %WORD, and symbols &apos;#&apos; (word boundary), &apos;#</em>&apos; (prefix) and &apos;<em>#&apos; (suffix).
+</em> documentation for regular expressions</p>
+<p>Bug fixes/improvements:
+<em> removed "Open selection in Praat" from Tools menu (which has been disabled for now)
+</em> parentheses can now be used in search pattern (they still need to be escaped in regular expressions)
+* fixed identification of the tier when opening in Praat</p>
+<h3 id="version-064-12022011">Version 0.6.4 (12/02/2011)</h3>
+<ul>
+<li>The description field is now searchable in the search window.</li>
+<li>Tags can be hidden in the search window</li>
+<li>PFC/PAC goodies (see documentation)              </li>
+</ul>
+<h3 id="version-063-09022011">Version 0.6.3 (09/02/2011)</h3>
+<ul>
+<li>First public version.</li>
+</ul>
+<p>Development of the C++ version started in early August 2011. A python proof-of-concept was sketched out in April/May 2011
+Dolmen is a complete redesign of the PFC platform (2006/2008), a concordancer implemented in Python and specifically written for the PFC project (www.projet-pfc.net). </p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2010-2017 Julien Eychenne.</p>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '../..';</script>
+        <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+        <script src="../../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

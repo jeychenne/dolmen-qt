@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>String manipulation - Dolmen</title>
+        <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../../css/highlight.css">
+        <link href="../../../css/dolmen.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../../index.html">Dolmen</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="../../../index.html">Getting started</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scripting <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../overview/index.html">Overview</a>
+</li>
+                            
+<li >
+    <a href="../../plugins/index.html">Plugins</a>
+</li>
+                            
+  <li class="dropdown-submenu">
+    <a href="#">Modules</a>
+    <ul class="dropdown-menu">
+            
+<li class="active">
+    <a href="index.html">String manipulation</a>
+</li>
+            
+<li >
+    <a href="../regex/index.html">Regular expressions</a>
+</li>
+            
+<li >
+    <a href="../signal/index.html">Event handling</a>
+</li>
+            
+<li >
+    <a href="../shell/index.html">User interface</a>
+</li>
+    </ul>
+  </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../../about/release-notes/index.html">Release notes</a>
+</li>
+                            
+<li >
+    <a href="../../../about/license/index.html">License</a>
+</li>
+                            
+<li >
+    <a href="../../../about/acknowledgements/index.html">Acknowledgements</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../../plugins/index.html">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../regex/index.html">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#string-manipulation">String manipulation</a></li>
+            <li><a href="#general-concepts">General concepts</a></li>
+            <li><a href="#application-programming-interface">Application Programming Interface</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="string-manipulation">String manipulation</h1>
+<p>This page documents the <code>string</code> module.</p>
+<h2 id="general-concepts">General concepts</h2>
+<p>A <code>string</code> is a sequence of characters enclosed between double quotes, such as <code>"this"</code>. Strings in Lua are immutable, which means that you cannot
+modify them directly. All function that "modify" a string actually return a new string but leave the original string unchanged. </p>
+<p>All string functions assume that strings are encoded according to the UTF-8 <a href="http://www.unicode.org/">Unicode</a> standard. A good tutorial about UTF-8 can be 
+found at the following address: <a href="http://www.zehnet.de/2005/02/12/unicode-utf-8-tutorial/">http://www.zehnet.de/2005/02/12/unicode-utf-8-tutorial</a>. In the
+remainder of this document, the word <em>character</em> is used to mean <em>code point</em>, unless otherwise noted. </p>
+<h2 id="application-programming-interface">Application Programming Interface</h2>
+<hr />
+<p><a id="func_at" class="apidef"></a></p>
+<h3 id="atstr-pos">at(str, pos)</h3>
+<p>Get character at position <code>pos</code>.</p>
+<hr />
+<p><a id="func_len" class="apidef"></a></p>
+<h3 id="lenstr">len(str)</h3>
+<p>Returns the length of the string, in Unicode code points.</p>
+<pre><code class="lua">local size = string.len(&quot;안녕하세요&quot;)
+print(size) -- Prints &quot;5&quot;
+</code></pre>
+
+<p>See also: <a href="#func_bytecount">byte_count</a></p>
+<hr />
+<p><a id="func_bytecount" class="apidef"></a></p>
+<h3 id="byte_countstr">byte_count(str)</h3>
+<p>Returns the length of the string, in bytes (or Unicode code units). For strings encoded in ASCII (mostly, strings of English text with no "special" character), 
+each code unit is represented with 1 byte, such that <code>bytecount</code> and <code>len</code> return the same result. For most other languages, however, the number of bytes and the 
+number of code points will be different.</p>
+<pre><code class="lua">
+local english = &quot;hello&quot;
+local korean  = &quot;안녕하세요&quot;
+
+print(string.len(english)) -- prints &quot;5&quot;
+print(string.len(korean))  -- prints &quot;5&quot;
+
+print(string.byte_count(english)) -- prints &quot;5&quot;
+print(string.byte_count(korean))  -- prints &quot;15&quot;
+</code></pre>
+
+<p>See also: <a href="#func_len">len</a></p>
+<hr />
+<p><a id="func_trim" class="apidef"></a></p>
+<h3 id="trimstr">trim(str)</h3>
+<p>Returns a copy of the string with whitespace characters removed at both ends of the string. </p>
+<pre><code class="lua">local s = &quot;\t  hello  \n&quot;
+
+s = string.trim(s)
+print(&quot;$&quot; .. s .. &quot;$&quot;) -- prints &quot;$hello$&quot;
+</code></pre>
+
+<p>See also: <a href="#func_ltrim">ltrim</a>, <a href="#func_rtrim">rtrim</a></p>
+<hr />
+<p><a id="func_ltrim" class="apidef"></a></p>
+<h3 id="ltrimstr">ltrim(str)</h3>
+<p>Returns a copy of the string with whitespace characters removed at the left end of the string. </p>
+<pre><code class="lua">local s = &quot;  hello  &quot;
+
+s = string.ltrim(s)
+print(&quot;$&quot; .. s .. &quot;$&quot;) -- prints &quot;$hello  $&quot;
+</code></pre>
+
+<p>See also: <a href="#func_trim">trim</a>, <a href="#func_rtrim">rtrim</a></p>
+<hr />
+<p><a id="func_rtrim" class="apidef"></a></p>
+<h3 id="rtrimstr">rtrim(str)</h3>
+<p>Returns a copy of the string with whitespace characters removed at the right end of the string. </p>
+<pre><code class="lua">local s = &quot;  hello  &quot;
+
+s = string.rtrim(s)
+print(&quot;$&quot; .. s .. &quot;$&quot;) -- prints &quot;$  hello$&quot;
+</code></pre>
+
+<p>See also: <a href="#func_ltrim">ltrim</a>, <a href="#func_trim">trim</a></p>
+<hr />
+<p><a id="func_startswith" class="apidef"></a></p>
+<h3 id="starts_withstr-prefix">starts_with(str, prefix)</h3>
+<p>Returns true if <code>str</code> starts with <code>prefix</code>, and <code>false</code> otherwise.</p>
+<p>See also: <a href="#func_endswith">ends_with</a></p>
+<hr />
+<p><a id="func_endswith" class="apidef"></a></p>
+<h3 id="ends_withstr-suffix">ends_with(str, suffix)</h3>
+<p>Returns true if <code>str</code> ends with <code>suffix</code>, and <code>false</code> otherwise.</p>
+<p>See also: <a href="#func_startswith">starts_with</a></p>
+<hr />
+<p><a id="func_contains" class="apidef"></a></p>
+<h3 id="containsstr-substring">contains(str, substring)</h3>
+<p>Returns true if <code>str</code> ends with <code>substring</code>, and <code>false</code> otherwise.</p>
+<hr />
+<p><a id="func_count" class="apidef"></a></p>
+<h3 id="countstr-substring">count(str, substring)</h3>
+<p>Returns the number of times <code>substring</code> appears in <code>str</code>. </p>
+<pre><code class="lua">local s = &quot;cacococococa&quot;
+local count = string.count(s, &quot;coco&quot;)
+
+print(count) -- prints &quot;2&quot;
+</code></pre>
+
+<p>Note: matches don't overlap. </p>
+<hr />
+<p><a id="func_ucase" class="apidef"></a></p>
+<h3 id="ucasestr">ucase(str)</h3>
+<p>Returns a copy of <code>str</code> where each code point has been converted to upper case. </p>
+<pre><code class="lua">local s1 = &quot;c'était ça&quot;
+local s2 = string.ucase(s1)
+
+print(s2) -- prints &quot;C'ÉTAIT ÇA&quot;
+</code></pre>
+
+<p>See also: <a href="#func_lcase">lcase</a></p>
+<hr />
+<p><a id="func_lcase" class="apidef"></a></p>
+<h3 id="lcasestr">lcase(str)</h3>
+<p>Returns a copy of <code>str</code> where each code point has been converted to lower case. </p>
+<pre><code class="lua">local s1 = &quot;C'ÉTAIT ÇA&quot;
+local s2 = string.lcase(s1)
+
+print(s2) -- prints &quot;c'était ça&quot;
+</code></pre>
+
+<p>See also: <a href="#func_ucase">ucase</a></p>
+<hr />
+<p><a id="func_replace" class="apidef"></a></p>
+<h3 id="replacestr-old-new">replace(str, old, new)</h3>
+<p>Returns a copy of <code>str</code> where all (non-overlapping) instances of the substring <code>old</code> have been replaced by <code>new</code>.</p>
+<p>See also:  <a href="#func_replace_at">replace_at</a>, <a href="#func_replace_first">replace_first</a>, <a href="#func_replace_last">replace_last</a></p>
+<hr />
+<p><a id="func_replace_at" class="apidef"></a></p>
+<h3 id="replace_atstr-at-count-new">replace_at(str, at, count, new)</h3>
+<p>Returns a copy of <code>str</code> where <code>count</code> code points, starting at position <code>at</code>, have been replaced by <code>new</code>.</p>
+<p>See also: <a href="#func_replace">replace</a>, <a href="#func_replace_first">replace_first</a>, <a href="#func_replace_last">replace_last</a></p>
+<hr />
+<p><a id="func_replace_first" class="apidef"></a></p>
+<h3 id="replace_firststr-old-new">replace_first(str, old, new)</h3>
+<p>Returns a copy of <code>str</code> where the first instance of the substring <code>old</code> has been replaced by <code>new</code>.</p>
+<p>See also:  <a href="#func_replace_at">replace_at</a>, <a href="#func_replace">replace</a>, <a href="#func_replace_last">replace_last</a> </p>
+<hr />
+<p><a id="func_replace_last" class="apidef"></a></p>
+<h3 id="replace_laststr-old-new">replace_last(str, old, new)</h3>
+<p>Returns a copy of <code>str</code> where the last instance of the substring <code>old</code> has been replaced by <code>new</code>.</p>
+<p>See also:  <a href="#func_replace_at">replace_at</a>, <a href="#func_replace">replace</a>, <a href="#func_replace_first">replace_first</a> </p>
+<hr />
+<p><a id="func_concat" class="apidef"></a></p>
+<h3 id="concatstr1-str2">concat(str1, str2)</h3>
+<p>Create a new string which is the concatenation of <code>str1</code> and <code>str2</code>. In general, you should use Lua's built-in concatenation 
+operator <code>..</code> instead of this function. </p>
+<hr />
+<p><a id="func_contains" class="apidef"></a></p>
+<h3 id="containsstr-substr">contains(str, substr)</h3>
+<p>Returns true if <code>str</code> contains <code>substr</code> and false otherwise. If <code>substr</code> is the empty string, the result is true. </p>
+<hr />
+<p><a id="func_remove" class="apidef"></a></p>
+<h3 id="removestr-substr">remove(str, substr)</h3>
+<p>Returns a copy of <code>str</code> where all (non-overlapping) instances of the substring <code>substr</code> have been removed.</p>
+<p>See also: <a href="#func_remove_at">remove_at</a>, <a href="#func_remove_first">remove_first</a>, <a href="#func_remove_last">remove_last</a></p>
+<hr />
+<p><a id="func_remove_at" class="apidef"></a></p>
+<h3 id="remove_atstr-at-count">remove_at(str, at, count)</h3>
+<p>Returns a copy of <code>str</code> where <code>count</code> code points, starting at position <code>at</code>, have been removed.</p>
+<p>See also: <a href="#func_remove">remove</a>, <a href="#func_remove_first">remove_first</a>, <a href="#func_remove_last">remove_last</a></p>
+<hr />
+<p><a id="func_remove_first" class="apidef"></a></p>
+<h3 id="remove_firststr-substr">remove_first(str, substr)</h3>
+<p>Returns a copy of <code>str</code> where the first instance of <code>substr</code> has been removed.</p>
+<p>See also: <a href="#func_remove_at">remove_at</a>, <a href="#func_remove">remove</a>, <a href="#func_remove_last">remove_last</a> </p>
+<hr />
+<p><a id="func_remove_last" class="apidef"></a></p>
+<h3 id="remove_laststr-substr">remove_last(str, substr)</h3>
+<p>Returns a copy of <code>str</code> where the last instance of <code>substr</code> has been removed.</p>
+<p>See also: <a href="#func_remove_at">remove_at</a>, <a href="#func_remove">remove</a>, <a href="#func_remove_first">remove_first</a> </p>
+<hr />
+<p><a id="func_reverse" class="apidef"></a></p>
+<h3 id="reversestr">reverse(str)</h3>
+<p>Returns a new string with all the characters in <code>str</code> in reversed order.</p>
+<hr />
+<p><a id="func_insert" class="apidef"></a></p>
+<h3 id="insertstr-pos-other">insert(str, pos, other)</h3>
+<p>Returns a copy of <code>str</code> with <code>other</code> inserted at position <code>pos</code></p>
+<hr />
+<p><a id="func_substr" class="apidef"></a></p>
+<h3 id="substrstr-from-to">substr(str, from, to)</h3>
+<p>Returns the substring of <code>str</code> starting at index <code>from</code> and ending at index <code>to</code> (inclusive). If <code>to</code> equals <code>-1</code>, returns
+the substring from <code>from</code> until the end of the string.</p>
+<pre><code class="lua">local s = &quot;c'était ça&quot;
+
+print(string.substr(s, 3, 7)) -- &quot;était&quot;
+print(string.substr(s, 3,-1)) -- &quot;était ça&quot;
+
+</code></pre>
+
+<hr />
+<p><a id="func_left" class="apidef"></a></p>
+<h3 id="leftstr-n">left(str, n)</h3>
+<p>Get the substring corresponding to the <code>n</code> first characters of the string. </p>
+<hr />
+<p><a id="func_right" class="apidef"></a></p>
+<h3 id="rightstr-n">right(str, n)</h3>
+<p>Get the substring corresponding to the <code>n</code> last characters of the string. </p>
+<hr />
+<p><a id="func_first" class="apidef"></a></p>
+<h3 id="firststr">first(str)</h3>
+<p>Get the first character of the string.</p>
+<hr />
+<p><a id="func_last" class="apidef"></a></p>
+<h3 id="laststr">last(str)</h3>
+<p>Get the last character of the string.</p>
+<hr />
+<p><a id="func_join" class="apidef"></a></p>
+<h3 id="joinstrings-delim">join(strings, delim)</h3>
+<p>Returns a new string which is the result of the concatenation of the strings in table <code>strings</code>, separated by <code>delim</code>. </p>
+<hr />
+<p><a id="func_split" class="apidef"></a></p>
+<h3 id="splitstr-delim">split(str, delim)</h3>
+<p>Returns a table of strings which have been split at each occurrence of the substring <code>delim</code>. If <code>delim</code> is the empty
+string, it returns a list of the characters in the string. </p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2010-2017 Julien Eychenne.</p>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '../../..';</script>
+        <script data-main="../../../mkdocs/js/search.js" src="../../../mkdocs/js/require.js"></script>
+        <script src="../../../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

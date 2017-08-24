@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Event handling - Dolmen</title>
+        <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../../css/highlight.css">
+        <link href="../../../css/dolmen.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../../index.html">Dolmen</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="../../../index.html">Getting started</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scripting <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../overview/index.html">Overview</a>
+</li>
+                            
+<li >
+    <a href="../../plugins/index.html">Plugins</a>
+</li>
+                            
+  <li class="dropdown-submenu">
+    <a href="#">Modules</a>
+    <ul class="dropdown-menu">
+            
+<li >
+    <a href="../string/index.html">String manipulation</a>
+</li>
+            
+<li >
+    <a href="../regex/index.html">Regular expressions</a>
+</li>
+            
+<li class="active">
+    <a href="index.html">Event handling</a>
+</li>
+            
+<li >
+    <a href="../shell/index.html">User interface</a>
+</li>
+    </ul>
+  </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../../../about/release-notes/index.html">Release notes</a>
+</li>
+                            
+<li >
+    <a href="../../../about/license/index.html">License</a>
+</li>
+                            
+<li >
+    <a href="../../../about/acknowledgements/index.html">Acknowledgements</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../regex/index.html">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../shell/index.html">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#event-handling">Event handling</a></li>
+            <li><a href="#general-concepts">General concepts</a></li>
+            <li><a href="#application-programming-interface">Application Programming Interface</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="event-handling">Event handling</h1>
+<p>This page documents the <code>signal</code> module, which is responsible for event handling in Dolmen. </p>
+<h2 id="general-concepts">General concepts</h2>
+<p>Dolmen provides an event handling mechanism known as signal/slot. A signal corresponds to a unique identifier which can
+be triggered when an event occurs, for instance when a button is clicked. A signal can be associated with any number of 
+functions called <em>slots</em>, which may or may not return a value. Whenever a signal is <em>emitted</em>, all the slots which are
+connected to it are executed (in an unspecified order). </p>
+<p>This mechanism is used throughout Dolmen, as it provides hooks which plugins can use to react to events triggered by the
+program. For example, a signal is emitted whenever a file is loaded, which can be used to add custom metadata to each file, 
+among other things.</p>
+<h2 id="application-programming-interface">Application Programming Interface</h2>
+<hr />
+<p><a id="func_new" class="apidef"></a></p>
+<h3 id="new">new()</h3>
+<p>Create and return a new signal identifier (id). Each id is guaranteed to be unique, such that two different calls to <code>new</code> will never yield the same id.</p>
+<p>If you need to store an id for subsequent use, store it in a (preferably local) variable.</p>
+<pre><code class="lua">local my_event = signal.new()
+-- Do something with my_event...
+</code></pre>
+
+<hr />
+<p><a id="func_connect" class="apidef"></a></p>
+<h3 id="connectid-slot">connect(id, slot)</h3>
+<p>Connect signal <code>id</code> to function <code>slot</code>. The slot can take any number of arguments, and can return a value.</p>
+<pre><code class="lua">local e = signal.new()
+
+local f = function(name)
+    print(&quot;Hold the door, &quot; .. name)
+end
+
+signal.connect(e, f)
+
+-- Print &quot;Hold the door, Hodor&quot; to the standard output
+signal.emit(e, &quot;Hodor&quot;)
+</code></pre>
+
+<p>See also: <a href="#func_disconnect">disconnect</a>, <a href="#func_emit">emit</a></p>
+<hr />
+<p><a id="func_disconnect" class="apidef"></a></p>
+<h3 id="disconnectid-slot">disconnect(id, slot)</h3>
+<p>Disconnect signal <code>id</code> from function <code>slot</code>. If <code>id</code> and <code>slot</code> are not connected, this function does nothing.</p>
+<pre><code class="lua">local e = signal.new()
+
+local f = function(name)
+    print(&quot;Hold the door, &quot; .. name)
+end
+
+signal.connect(evt, f)
+
+-- Print &quot;Hold the door, Hodor&quot; to the standard output
+signal.emit(e, &quot;Hodor&quot;)
+
+signal.disconnect(e, f)
+
+-- Do nothing since e and f are no longer connected
+signal.emit(e, &quot;Hodor&quot;)
+
+</code></pre>
+
+<p>See also: <a href="#func_connect">connect</a>, <a href="#func_emit">emit</a></p>
+<hr />
+<p><a id="func_emit" class="apidef"></a></p>
+<h3 id="emitid">emit(id, ...)</h3>
+<p>Emit signal <code>id</code>, followed by any number of arguments. The arguments are forwarded to all the slots which are connected to this signal (if any). 
+Following Lua's function call conventions, if the slot receives less arguments than it expects, missing arguments have the value <code>nil</code>; if it receives more arguments than expected, additional arguments are ignored.</p>
+<p>This function collects all the return values from the slots it called into a table, which it returns to the caller. (Keep in mind that if a slot doesn't explicitly return a value, its
+return value is <code>nil</code>.) </p>
+<pre><code class="lua">local e = signal.new()
+
+local f1 = function(arg1)
+    print(&quot;f1 received a &quot; .. type(arg1))
+end
+
+local f2 = function(arg1, arg2)
+    print(&quot;f2 received a &quot; .. type(arg1) &quot; and a &quot; .. type(arg2))
+end
+
+signal.connect(e, f1)
+signal.connect(e, f2)
+
+-- Print &quot;f1 received a number&quot; and &quot;f2 received a number and a string&quot;
+signal.emit(e, 3.14, &quot;pi&quot;)
+</code></pre>
+
+<p>Note: the order in which slots are called is unspecified. In general, it will correspond to the order in which they were
+registered, but this should not be relied upon.  </p>
+<p>See also: <a href="#func_connect">connect</a>, <a href="#func_disconnect">disconnect</a></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2010-2017 Julien Eychenne.</p>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '../../..';</script>
+        <script data-main="../../../mkdocs/js/search.js" src="../../../mkdocs/js/require.js"></script>
+        <script src="../../../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
