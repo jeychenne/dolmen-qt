@@ -68,7 +68,7 @@ void Viewer::displayHelp(const QString &page)
     }
     else
     {
-        QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
+        QDesktopServices::openUrl(QUrl::fromLocalFile(url));
     }
 }
 
