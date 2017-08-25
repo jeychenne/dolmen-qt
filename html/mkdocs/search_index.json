@@ -51,13 +51,13 @@
             "title": "Known issues"
         },
         {
-            "location": "/scripting/overview/index.html",
-            "text": "Overview\n\n\nDolmen is built on top of the \nLua\n scripting engine.  More information can be found in the following references: XXXXXXXXXX",
+            "location": "/scripting/index.html",
+            "text": "Overview\n\n\nDolmen can be extended using the \nLua\n scripting language. There are several ways this \n\n\n\n\nthe console at the bottom of the main window accepts lua commands.\n\n\nplugins\n are extensions, written in a JSON and Lua, which can add features to Dolmen\n\n\n\n\nTO BE CONTINUED...",
             "title": "Overview"
         },
         {
-            "location": "/scripting/overview/index.html#overview",
-            "text": "Dolmen is built on top of the  Lua  scripting engine.  More information can be found in the following references: XXXXXXXXXX",
+            "location": "/scripting/index.html#overview",
+            "text": "Dolmen can be extended using the  Lua  scripting language. There are several ways this    the console at the bottom of the main window accepts lua commands.  plugins  are extensions, written in a JSON and Lua, which can add features to Dolmen   TO BE CONTINUED...",
             "title": "Overview"
         },
         {

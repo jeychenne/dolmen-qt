@@ -5,7 +5,7 @@ pages:
 - Getting started: index.md
 
 - Scripting:
-    - Overview: scripting/overview.md
+    - Overview: scripting/index.md
     - Plugins: scripting/plugins.md
     - Modules:
         - String manipulation: scripting/api/string.md
