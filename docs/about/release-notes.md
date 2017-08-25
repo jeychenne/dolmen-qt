@@ -1,6 +1,6 @@
 ## Changelog for Dolmen
 
-### Version 1.9 (??/?/2017)
+### Version 1.9 (25/8/2017)
 
 * Small changes in the user interface
 * lua scripting engine

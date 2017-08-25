@@ -1,5 +1,7 @@
 # Welcome to Dolmen
 
+**<span style="color:blue">This is the new website for Dolmen 2.0. It is currently under construction.</span>**
+
 ## Overview
 
 Dolmen is a free, open-source software toolbox for the analysis of annotated speech. It offers a user-friendly interface to manage, annotate and query language corpora. It is particularly well suited for dealing with time-aligned data. The main features it offers are: 
@@ -14,8 +16,15 @@ Dolmen is a free, open-source software toolbox for the analysis of annotated spe
 Dolmen runs on all major platforms (Windows, Mac OS X and GNU/Linux) and is freely available under the terms of the GNU General Public License (GPL). 
 The latest version of Dolmen can be downloaded from [www.dolmenling.com](http://www.dolmenling.com). If you encounter any problem or bug, please write to j.eychenne@gmail.com. 
 
+## Preview version of Dolmen 2 (Windows only)
 
-## Installation
+Dolmen 1.9 is the most up-to-date version on Dolmen. It is a preview version of Dolmen 2.0, and is currently available for Windows only 
+(other platforms will follow once Dolmen 2.0 is released). Although it is still lacking some features and its documentation is incomplete, 
+Windows users are encouraged to upgrade to this version as it contains many improvements and bug fixes. Note that this version can be installed
+side by side with the previous version (Dolmen 1.3).
+
+## Installation (previous version)
+
 
 ### Windows
 On Windows, Dolmen is provided as a self-contained installer file. Simply double-click on ‘dolmen_setup.exe’ and follow the instructions.

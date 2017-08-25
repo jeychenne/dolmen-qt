@@ -22,6 +22,11 @@ Dolmen uses the following open source libraries/projects:
 - onigmo, developed by K.Takata and K.Kosako (BSD), see [github.com/k-takata/Onigmo](https://github.com/k-takata/Onigmo)
 
 
+Dolmen uses the following services for hosting its source code and documentation:
+
+- [GitHub](https://github.com)
+- [Read the Docs](https://readthedocs.org)
+
 
 The development of search grammars has been supported by the Japanese Society for the Promotion of Science (JSPS), Grant-in-Aid for Scientific Research (B) n°23320121 (2011-2014). Project title: <i>A corpus-based longitudinal study of the interphonological features of Japanese learners of French</i>.
 Project leader: Sylvain DETEY (Waseda University).

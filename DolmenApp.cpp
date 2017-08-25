@@ -320,7 +320,7 @@ void DolmenApp::onExtendConcMenu()
 
 void DolmenApp::onGoToWebsite()
 {
-    QDesktopServices::openUrl(QUrl("http://www.dolmenling.com"));
+    QDesktopServices::openUrl(QUrl("http://dolmen.rtfd.io"));
 }
 
 void DolmenApp::openRecentProject() // [SLOT]

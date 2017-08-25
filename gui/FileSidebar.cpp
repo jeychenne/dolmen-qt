@@ -43,11 +43,11 @@ FileSidebar::FileSidebar(QWidget *parent) :
 
 	btn_corpus = makeButton(group, this, QIcon(":/icons/32x32/corpus.png"), tr("Corpus"));
 	btn_bookmarks = makeButton(group, this, QIcon(":/icons/32x32/bookmark.png"), tr("Bookmarks"));
-	btn_scripts = makeButton(group, this, QIcon(":/icons/32x32/console.png"), tr("Scripts"));
+    //btn_scripts = makeButton(group, this, QIcon(":/icons/32x32/console.png"), tr("Scripts"));
 
     tool_layout->addWidget(btn_corpus);
     tool_layout->addWidget(btn_bookmarks);
-    tool_layout->addWidget(btn_scripts);
+    //tool_layout->addWidget(btn_scripts);
     tool_layout->addStretch();
     btn_corpus->toggle();
 

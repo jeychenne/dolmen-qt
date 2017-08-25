@@ -138,7 +138,7 @@
 <p>This page documents the <code>string</code> module.</p>
 <h2 id="general-concepts">General concepts</h2>
 <p>A <code>string</code> is a sequence of characters enclosed between double quotes, such as <code>"this"</code>. Strings in Lua are immutable, which means that you cannot
-modify them directly. All function that "modify" a string actually return a new string but leave the original string unchanged. </p>
+modify them directly. All functions which "modify" a string actually return a new (modified) copy of the string but leave the original string unchanged. </p>
 <p>All string functions assume that strings are encoded according to the UTF-8 <a href="http://www.unicode.org/">Unicode</a> standard. A good tutorial about UTF-8 can be 
 found at the following address: <a href="http://www.zehnet.de/2005/02/12/unicode-utf-8-tutorial/">http://www.zehnet.de/2005/02/12/unicode-utf-8-tutorial</a>. In the
 remainder of this document, the word <em>character</em> is used to mean <em>code point</em>, unless otherwise noted. </p>
@@ -233,27 +233,27 @@ print(count) -- prints &quot;2&quot;
 
 <p>Note: matches don't overlap. </p>
 <hr />
-<p><a id="func_ucase" class="apidef"></a></p>
-<h3 id="ucasestr">ucase(str)</h3>
+<p><a id="func_to_upper" class="apidef"></a></p>
+<h3 id="to_upperstr">to_upper(str)</h3>
 <p>Returns a copy of <code>str</code> where each code point has been converted to upper case. </p>
 <pre><code class="lua">local s1 = &quot;c'était ça&quot;
-local s2 = string.ucase(s1)
+local s2 = string.to_upper(s1)
 
 print(s2) -- prints &quot;C'ÉTAIT ÇA&quot;
 </code></pre>
 
-<p>See also: <a href="#func_lcase">lcase</a></p>
+<p>See also: <a href="#func_to_lower">to_lower</a></p>
 <hr />
-<p><a id="func_lcase" class="apidef"></a></p>
-<h3 id="lcasestr">lcase(str)</h3>
+<p><a id="func_to_lower" class="apidef"></a></p>
+<h3 id="to_lowerstr">to_lower(str)</h3>
 <p>Returns a copy of <code>str</code> where each code point has been converted to lower case. </p>
 <pre><code class="lua">local s1 = &quot;C'ÉTAIT ÇA&quot;
-local s2 = string.lcase(s1)
+local s2 = string.to_lower(s1)
 
 print(s2) -- prints &quot;c'était ça&quot;
 </code></pre>
 
-<p>See also: <a href="#func_ucase">ucase</a></p>
+<p>See also: <a href="#func_to_upper">to_upper</a></p>
 <hr />
 <p><a id="func_replace" class="apidef"></a></p>
 <h3 id="replacestr-old-new">replace(str, old, new)</h3>

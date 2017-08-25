@@ -5,7 +5,7 @@ This page documents the `string` module.
 ## General concepts
 
 A `string` is a sequence of characters enclosed between double quotes, such as `"this"`. Strings in Lua are immutable, which means that you cannot
-modify them directly. All function that "modify" a string actually return a new string but leave the original string unchanged. 
+modify them directly. All functions which "modify" a string actually return a new (modified) copy of the string but leave the original string unchanged. 
 
 All string functions assume that strings are encoded according to the UTF-8 [Unicode](http://www.unicode.org/) standard. A good tutorial about UTF-8 can be 
 found at the following address: [http://www.zehnet.de/2005/02/12/unicode-utf-8-tutorial](http://www.zehnet.de/2005/02/12/unicode-utf-8-tutorial/). In the
@@ -150,35 +150,35 @@ Note: matches don't overlap.
 
 ---
 
-<a id="func_ucase" class="apidef"></a>
-### ucase(str)
+<a id="func_to_upper" class="apidef"></a>
+### to_upper(str)
 
 Returns a copy of `str` where each code point has been converted to upper case. 
 
 ```lua
 local s1 = "c'était ça"
-local s2 = string.ucase(s1)
+local s2 = string.to_upper(s1)
 
 print(s2) -- prints "C'ÉTAIT ÇA"
 ```
 
-See also: [lcase](#func_lcase)
+See also: [to_lower](#func_to_lower)
 
 ---
 
-<a id="func_lcase" class="apidef"></a>
-### lcase(str)
+<a id="func_to_lower" class="apidef"></a>
+### to_lower(str)
 
 Returns a copy of `str` where each code point has been converted to lower case. 
 
 ```lua
 local s1 = "C'ÉTAIT ÇA"
-local s2 = string.lcase(s1)
+local s2 = string.to_lower(s1)
 
 print(s2) -- prints "c'était ça"
 ```
 
-See also: [ucase](#func_ucase)
+See also: [to_upper](#func_to_upper)
 
 
 ---
