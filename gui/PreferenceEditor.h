@@ -60,12 +60,13 @@ public slots:
 private slots:
 	void setAppDataDirPath();
 	void setPraatPath();
+    void setResourcesPath();
 
 private:
     QDialogButtonBox *box_buttons;
-    QVBoxLayout      *main_layout, *gen_layout, *praat_layout, *advanced_layout;
+    QVBoxLayout      *main_layout, *gen_layout, *advanced_layout;
     QTabWidget       *tabs;
-    QLineEdit        *edit_appdatadir, *edit_praat;
+    QLineEdit        *edit_appdatadir, *edit_praat, *edit_resources;
     QWidget          *tab_general, *tab_praat, *tab_advanced;
     QSpinBox         *spinbox_match_context_window;
     QComboBox        *box_search_style, *box_mode;

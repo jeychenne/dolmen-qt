@@ -94,12 +94,12 @@ QString getMainDatabase()
     return dir.path() + QDir::separator() + "dolmen.db";
 }
 
-QString getResourcesDir()
+QString getDefaultResourcesDir()
 {
 #ifdef Q_OS_WIN
     return Global::AppRootDir;
 #elif defined(Q_OS_MAC)
-    return Global::MacResourcesDir;;
+    return Global::MacResourcesDir;
 #else
     return "/usr/local/share/dolmen";
 #endif
@@ -113,7 +113,12 @@ QString getSystemPluginDir()
     QString tail("Plugins");
 #endif
 
-    return getResourcesDir() + QDir::separator() + tail;
+    return Global::ResourcesPath + QDir::separator() + tail;
+}
+
+QString getHelpDir()
+{
+return Global::ResourcesPath + QDir::separator() + "html";
 }
 
 QString interpolatePath(QString path)

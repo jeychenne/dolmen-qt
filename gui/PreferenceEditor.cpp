@@ -68,30 +68,39 @@ void PreferenceEditor::setupGeneralTab()
 	QString choose = tr("choose...");
 
 	// App data dir
-	QHBoxLayout *hbox1 = new QHBoxLayout;
+    QHBoxLayout *hbox_appdata = new QHBoxLayout;
 	QPushButton *appdir_btn = new QPushButton(choose);
     edit_appdatadir = new QLineEdit;
     edit_appdatadir->setText(Global::AppDataDir);
 
 	connect(appdir_btn, SIGNAL(clicked()), this, SLOT(setAppDataDirPath()));
 
-    hbox1->addWidget(edit_appdatadir);
-	hbox1->addWidget(appdir_btn);
+    hbox_appdata->addWidget(edit_appdatadir);
+    hbox_appdata->addWidget(appdir_btn);
+
+    // Resources path
+    auto hbox_resources = new QHBoxLayout;
+    auto resources_btn = new QPushButton(tr("Choose..."));
+    edit_resources = new QLineEdit;
+    edit_resources->setText(Global::ResourcesPath);
+    connect(resources_btn, SIGNAL(clicked()), this, SLOT(setResourcesPath()));
+    hbox_resources->addWidget(edit_resources);
+    hbox_resources->addWidget(resources_btn);
 
 	// Context window
-	QHBoxLayout *hbox2 = new QHBoxLayout;
+    QHBoxLayout *hbox_context = new QHBoxLayout;
 	QLabel *contextLabel = new QLabel(tr("Match context window:"));
     spinbox_match_context_window = new QSpinBox;
     spinbox_match_context_window->setRange(10, 100);
     spinbox_match_context_window->setSingleStep(1);
     spinbox_match_context_window->setValue(Global::MatchCotextLength);
 
-	hbox2->addWidget(contextLabel);
-    hbox2->addWidget(spinbox_match_context_window);
+    hbox_context->addWidget(contextLabel);
+    hbox_context->addWidget(spinbox_match_context_window);
 
 	// Search style
-	QHBoxLayout *hbox3 = new QHBoxLayout;
-	QLabel *ssLabel = new QLabel(tr("Search style:"));
+    QHBoxLayout *hbox_search_style = new QHBoxLayout;
+    QLabel *style_label = new QLabel(tr("Search style:"));
     box_search_style = new QComboBox;
     box_search_style->addItem(DM_SEARCH_STYLE_TEXT);
     box_search_style->addItem(DM_SEARCH_STYLE_PERL);
@@ -104,29 +113,31 @@ void PreferenceEditor::setupGeneralTab()
 		}
 	}
 
-	hbox3->addWidget(ssLabel);
-    hbox3->addWidget(box_search_style);
+    hbox_search_style->addWidget(style_label);
+    hbox_search_style->addWidget(box_search_style);
 
     gen_layout->addWidget(new QLabel(tr("Application data folder:")));
-    gen_layout->addLayout(hbox1);
+    gen_layout->addLayout(hbox_appdata);
+    gen_layout->addWidget(new QLabel(tr("Resources folder:")));
+    gen_layout->addLayout(hbox_resources);
     gen_layout->addSpacing(20);
-    gen_layout->addLayout(hbox2);
-    gen_layout->addLayout(hbox3);
+    gen_layout->addLayout(hbox_context);
+    gen_layout->addLayout(hbox_search_style);
     gen_layout->addStretch();
 }
 
 void PreferenceEditor::setupAdvancedTab()
 {
 	// Praat Path
-	QHBoxLayout *hboxPraat = new QHBoxLayout;
-	QPushButton *praatPath_btn = new QPushButton(tr("Choose..."));
+    auto hbox_praat = new QHBoxLayout;
+    auto praat_path_btn = new QPushButton(tr("Choose..."));
     edit_praat = new QLineEdit;
     edit_praat->setText(Global::PraatPath);
 
-	connect(praatPath_btn, SIGNAL(clicked()), this, SLOT(setPraatPath()));
+    connect(praat_path_btn, SIGNAL(clicked()), this, SLOT(setPraatPath()));
 
-    hboxPraat->addWidget(edit_praat);
-	hboxPraat->addWidget(praatPath_btn);
+    hbox_praat->addWidget(edit_praat);
+    hbox_praat->addWidget(praat_path_btn);
 
     // Antialiasing
     checkbox_antialiasing = new QCheckBox(tr("Use antialiasing in plots"));
@@ -154,7 +165,7 @@ void PreferenceEditor::setupAdvancedTab()
     hbox1->addWidget(box_mode);
 
     advanced_layout->addWidget(new QLabel(tr("Praat path:")));
-    advanced_layout->addLayout(hboxPraat);
+    advanced_layout->addLayout(hbox_praat);
     advanced_layout->addSpacing(10);
     advanced_layout->addLayout(hbox1);
     advanced_layout->addSpacing(10);
@@ -167,6 +178,7 @@ void PreferenceEditor::accept()
 {
 	// General tab
     Global::AppDataDir = edit_appdatadir->text();
+    Global::ResourcesPath = edit_resources->text();
     Global::MatchCotextLength = spinbox_match_context_window->value();
     Global::DefaultSearchStyle = box_search_style->currentText();
 
@@ -189,6 +201,11 @@ void PreferenceEditor::setPraatPath()
     this->setLineEditFile(edit_praat);
 }
 
+void PreferenceEditor::setResourcesPath()
+{
+    this->setLineEditFolder(edit_resources);
+}
+
 void PreferenceEditor::setLineEditFolder(QLineEdit *line)
 {
 	QString path = nat(QFileDialog::getExistingDirectory(this->parentWidget(), tr("Choose folder..."),
@@ -200,7 +217,7 @@ void PreferenceEditor::setLineEditFolder(QLineEdit *line)
 
 void PreferenceEditor::setLineEditFile(QLineEdit *line)
 {
-	QString path = nat(QFileDialog::getOpenFileName(this->parentWidget(), tr("Choose folder..."),
+    QString path = nat(QFileDialog::getOpenFileName(this->parentWidget(), tr("Choose file..."),
 													dm_home()));
 
 	if (path != "")

@@ -25,6 +25,7 @@
 
 #include <QDesktopServices>
 #include "Viewer.h"
+#include "utils/routines.h"
 
 Viewer::Viewer(QWidget *parent, QWidget *app) :
     QTabWidget(parent)
@@ -51,17 +52,24 @@ void Viewer::setStartView()
     connect(view, SIGNAL(open_project()), m_app, SLOT(onOpenProject()));
     connect(view, SIGNAL(open_doc()), m_app, SLOT(openDocumentation()));
     connect(view, SIGNAL(open_settings()), m_app, SLOT(editPreferences()));
-
-//    new HelpView(this, "/doc/start.html", "Start");
 }
 
 void Viewer::displayHelp(const QString &page)
 {
-    QString url("file:///home/julien/Devel/dolmen/html");
+    QString url(getHelpDir());
     url.append(page);
     url.append("/index.html");
 
-    QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
+    if (! QFileInfo(url).exists())
+    {
+        QMessageBox dlg(QMessageBox::Critical, tr("Documentation not found"),
+                    tr("Cannot find the documentation on disk.\nPlease adjust the path in the preferences."));
+        dlg.exec();
+    }
+    else
+    {
+        QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
+    }
 }
 
 void Viewer::openProjectView(Project *project)

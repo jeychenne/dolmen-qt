@@ -45,8 +45,9 @@ int getMatchCotextLength();
 QString getMetadataDir();
 QString getUserPluginDir();
 QString getMainDatabase();
-QString getResourcesDir();
+QString getDefaultResourcesDir();
 QString getSystemPluginDir();
+QString getHelpDir();
 
 bool dm_isNumeric(const QString &); // int or float value
 bool dm_isListNumeric(const QStringList &);

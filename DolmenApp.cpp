@@ -201,6 +201,14 @@ void DolmenApp::readSettings()
 		Global::ApplicationMode = settings.value("Advanced/ApplicationMode").toString();
     }
 
+    if (settings.contains("Advanced/ResourcesPath")) {
+        Global::ResourcesPath = settings.value("Advanced/ResourcesPath").toString();
+    }
+    else {
+        Global::ResourcesPath = getDefaultResourcesDir();
+    }
+
+
 	settings.sync();
 }
 
@@ -229,6 +237,8 @@ void DolmenApp::writeSettings()
 
 	// Application mode
 	settings.setValue("Advanced/ApplicationMode", Global::ApplicationMode);
+
+    settings.setValue("Advanced/ResourcesPath", Global::ResourcesPath);
 }
 
 void DolmenApp::setProject()

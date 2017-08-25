@@ -58,10 +58,10 @@ bool Plugin::initialize()
         return false;
 
     QVariantMap info = json.map["PluginInfo"].toMap();
-    if (!info.contains("Name") || !info.contains("MainApplication"))
+    if (!info.contains("Name"))
         return false;
 
-    m_is_main = info["MainApplication"].toString() == "true" ? true: false;
+    m_is_main = info.contains("MainApplication") && info["MainApplication"].toString() == "true";
     m_name = info["Name"].toString();
 
     if (json.map.contains("Menu"))

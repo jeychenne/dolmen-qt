@@ -72,6 +72,7 @@ public:
 
 	static QString PraatPrefsDir;
 	static QString PraatPath;
+    static QString ResourcesPath;
     static bool PraatIsInstalled, UseAntialiasingInPlots, EnableStatusBar;
     static QStatusBar *Output;
     static PraatInstance *Praat;
