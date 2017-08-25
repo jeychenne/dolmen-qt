@@ -38,14 +38,13 @@ Source: "C:\Lib\dolmen_release\dolmen.exe"; DestDir: "{app}"; Flags: ignoreversi
 ;Source: "C:\build\dolmen_deploy\dolmen.exe.embed.manifest"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Lib\dolmen_release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-
 Source: "C:\Lib\dolmen_release\iconengines\*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Lib\dolmen_release\sqldrivers\*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Lib\dolmen_release\platforms\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Lib\dolmen_release\translations\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Lib\dolmen_release\imageformats\*"; DestDir: "{app}\imageformats"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Lib\dolmen_release\Plugins\*"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
-
+Source: "C:\Users\Julien\dolmen\html\*"; DestDir: "{app}\html"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
