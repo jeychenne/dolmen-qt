@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Dolmen"
-#define MyAppVersion "1.3"
+#define MyAppVersion "1.9.0"
 #define MyAppPublisher "Julien Eychenne"
-#define MyAppURL "http://www.julieneychenne.info/dolmen"
+#define MyAppURL "http://dolmen.rtfd.io"
 #define MyAppExeName "dolmen.exe"
 
 [Setup]
@@ -19,9 +19,9 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={pf}\{#MyAppName}2
 DefaultGroupName={#MyAppName}
-LicenseFile=D:\Lib\winlibs\license_gpl.txt
+LicenseFile=C:\Users\Julien\dolmen\docs\about\license.md
 OutputDir=C:\Users\Julien\Desktop
 OutputBaseFilename=dolmen_setup
 Compression=lzma
@@ -34,15 +34,17 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Lib\winlibs\dolmen.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Lib\dolmen_release\dolmen.exe"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "C:\build\dolmen_deploy\dolmen.exe.embed.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Lib\winlibs\*.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "C:\build\dolmen_deploy\msvcp100.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Lib\dolmen_release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "D:\Lib\winlibs\sqldrivers\*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Lib\winlibs\platforms\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Lib\winlibs\imageformats\*"; DestDir: "{app}\imageformats"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Lib\winlibs\Plugins\*"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+Source: "C:\Lib\dolmen_release\iconengines\*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Lib\dolmen_release\sqldrivers\*"; DestDir: "{app}\sqldrivers"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Lib\dolmen_release\platforms\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Lib\dolmen_release\translations\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Lib\dolmen_release\imageformats\*"; DestDir: "{app}\imageformats"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Lib\dolmen_release\Plugins\*"; DestDir: "{app}\Plugins"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
