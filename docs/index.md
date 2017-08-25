@@ -1,6 +1,8 @@
 # Welcome to Dolmen
 
-**<span style="color:blue">This is the new website for Dolmen 2.0. It is currently under construction.</span>**
+**<span style="color:blue">This is the new website for Dolmen 2.0. It is currently under construction.</span>.**
+
+ You can follow the development process on [GitHub](https://github.com/jeychenne/dolmen).
 
 ## Overview
 
@@ -14,16 +16,28 @@ Dolmen is a free, open-source software toolbox for the analysis of annotated spe
 * Scripting engine: Dolmen can be extended with plugins written in Lua and JSON.
 
 Dolmen runs on all major platforms (Windows, Mac OS X and GNU/Linux) and is freely available under the terms of the GNU General Public License (GPL). 
-The latest version of Dolmen can be downloaded from [www.dolmenling.com](http://www.dolmenling.com). If you encounter any problem or bug, please write to j.eychenne@gmail.com. 
+The latest version of Dolmen can be downloaded from [http://dolmen.rtfd.io](http://dolmen.rtfd.io). If you encounter any problem or bug, 
+please write to jeychenne@gmail.com. 
 
-## Preview version of Dolmen 2 (Windows only)
+## Download 
 
-Dolmen 1.9 is the most up-to-date version on Dolmen. It is a preview version of Dolmen 2.0, and is currently available for Windows only 
+### Dolmen 2 (preview version)
+
+Dolmen 1.9 is the latest Dolmen: it is a preview version of Dolmen 2.0, and is currently only available for Windows 
 (other platforms will follow once Dolmen 2.0 is released). Although it is still lacking some features and its documentation is incomplete, 
-Windows users are encouraged to upgrade to this version as it contains many improvements and bug fixes. Note that this version can be installed
-side by side with the previous version (Dolmen 1.3).
+all Windows users are encouraged to upgrade to this version as it contains many improvements and bug fixes. 
 
-## Installation (previous version)
+Download version 1.9.0 (25/8/2017):
+
+- Windows 7 and later: [dolmen_setup.exe](http://julieneychenne.info/files/v2/dolmen_setup.exe)
+
+Note that this version can be installed side by side with the previous version (Dolmen 1.3).
+
+### Dolmen 1.3 (stable version)
+
+Dolmen 1.3 can be downloaded from [here](http://www.julieneychenne.info/dolmen/#download).
+
+## Installation
 
 
 ### Windows
@@ -32,7 +46,7 @@ On Windows, Dolmen is provided as a self-contained installer file. Simply double
 The procedure will install Dolmen in your `Program Files` directory and will create a shortcut in the start menu (and optionally on the desktop).
 
 If you wish to be able to open files in Praat from Dolmen, you will need to install Praat in Dolmen’s installation directory, which should be either 
-`C:\Program Files (x86)\Dolmen\Tools` or `C:\Program Files\Dolmen\Tools`, depending on your system. Alternatively, you can modify Praat’s default 
+`C:\Program Files (x86)\Dolmen2\Tools` or `C:\Program Files\Dolmen2\Tools`, depending on your system. Alternatively, you can modify Praat’s default 
 path with the preference editor.</p>
 
 ### Mac OS
