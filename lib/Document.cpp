@@ -26,7 +26,7 @@ QString Document::text() const
     return m_text;
 }
 
-QString Document::leftCotext(int pos) const
+QString Document::leftCotext(int pos, const QString &separator) const
 {
     QString cotext;
 
@@ -38,12 +38,12 @@ QString Document::leftCotext(int pos) const
     else
         cotext = m_text.mid(pos - Global::MatchCotextLength, Global::MatchCotextLength);
 
-    cotext.replace('\n', LINE_BOUNDARY);
+    cotext.replace('\n', separator);
 
     return cotext;
 }
 
-QString Document::rightCotext(int pos) const
+QString Document::rightCotext(int pos, const QString &separator) const
 {
     QString cotext;
 
@@ -56,7 +56,7 @@ QString Document::rightCotext(int pos) const
     else
         cotext = m_text.mid(pos, Global::MatchCotextLength);
 
-    cotext.replace('\n', LINE_BOUNDARY);
+    cotext.replace('\n', separator);
 
     return cotext;
 }
@@ -68,8 +68,9 @@ void Document::save()
 
 void Document::open()
 {
-    if (this->pathIsValid())
-    {
+    if (m_open) { return; }
+
+    if (this->pathIsValid()) {
         readFromDisk();
     }
 }

@@ -905,8 +905,8 @@ void DolmenApp::displayQuery(Query *query)
 
 	if (query->results().size() == 0)
 	{
-		QString msg(tr("No match found."));
-		error(msg);
+        QMessageBox dlg(QMessageBox::Warning, tr("No match"), tr("No match found"));
+        dlg.exec();
 	}
 	else
 	{

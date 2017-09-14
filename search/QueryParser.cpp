@@ -23,7 +23,9 @@
  * Created: //
  */
 
+#include <QRegularExpression>
 #include "QueryParser.h"
+#include "Query.h"
 
 QueryParser::QueryParser(Project *project)
 {
@@ -36,34 +38,38 @@ Query* QueryParser::parse(QString queryString, Grammar *grammar)
 //	qDebug() << queryString;
 	queryString = queryString.trimmed();
     Query *query = new Query(queryString, grammar);
-	QRegExp regex_query("SEARCH\\s+(.+)\\s+"
+    QRegularExpression regex_query("SEARCH\\s+(.+)\\s+"
 						"FROM\\s+(.+)\\s+"
 						"WHERE\\s+(.+)\\s+"
-						"RETURN\\s+(.+)\\s*;");
-	regex_query.setCaseSensitivity(Qt::CaseInsensitive);
+                        "RETURN\\s+<(.*?)>\\s+(.+)\\s*;", QRegularExpression::CaseInsensitiveOption);
 
-	if (regex_query.indexIn(queryString) == -1 || regex_query.captureCount() != 4)
+    auto match = regex_query.match(queryString);
+
+    if (!match.hasMatch() || match.lastCapturedIndex() != 5)
 	{
 		QString msg("Search error: invalid syntax");
 		emit error_search(msg);
 		return NULL;
 	}
 
-	parseSearchStatement(query, regex_query.cap(1));
+    parseSearchStatement(query, match.captured(1));
 	err = this->error();
 
 	if (err != "")
 	{
 		emit error_search(err); return NULL;
 	}
-	parseFromStatement(query, regex_query.cap(2));
-	parseWhereStatement(query, regex_query.cap(3));
+    parseFromStatement(query, match.captured(2));
+    parseWhereStatement(query, match.captured(3));
 	err = this->error();
 	if (err != "")
 	{
 		emit error_search(err); return NULL;
 	}
-	parseReturnStatement(query, regex_query.cap(4));
+    QString sep = match.captured(4);
+    sep.replace("%SPACE%", " ");
+    query->setSeparator(sep);
+    parseReturnStatement(query, match.captured(5));
 
 	return query;
 }
@@ -71,29 +77,34 @@ Query* QueryParser::parse(QString queryString, Grammar *grammar)
 void QueryParser::parseSearchStatement(Query *query, QString statement)
 {	
 	// for now, only tiers (x = cross-tier)
-    QRegExp regex("@(.+)\\[(\\d+|x|\\$.+)\\]"); // index 0 means all instances
+    QRegularExpression regex("@(.+)\\[(\\d+|x|\\$.+)\\]"); // index 0 means all instances
 
-	if (regex.indexIn(statement) == -1)
+    auto match = regex.match(statement);
+
+    if (!match.hasMatch())
 	{
 		m_error = tr("Search error: no tier number indicated"); return;
 	}
 
-    if (regex.cap(2) == "x")
+    auto tier = match.captured(2);
+
+    if (tier == "x")
 		query->setListIndex(-1); // invalid index
 	else
-		query->setListIndex(regex.cap(2).toInt());
+        query->setListIndex(tier.toInt());
 	// process flags
 	if (statement.contains("-cs"))
 		query->setCaseSensitive(true);
 
     if (statement.contains("-annotators"))
     {
-        QRegExp rx_annot("-annotators-ref/(.*)//(.+)/");
+        QRegularExpression rx_annot("-annotators-ref/(.*)//(.+)/");
+        auto match = rx_annot.match(statement);
 
-        if (rx_annot.indexIn(statement) > -1)
+        if (match.hasMatch())
         {
-            QString ref_annotator = rx_annot.cap(1);
-            QStringList annotators = rx_annot.cap(2).split('/');
+            QString ref_annotator = match.captured(1);
+            QStringList annotators = match.captured(2).split('/');
 
             /* We need at least two annotators */
             if (annotators.size() >= 2)
@@ -126,12 +137,14 @@ void QueryParser::parseReturnStatement(Query *query, QString statement)
 	else
 	{
 		SearchObjectCode object = parseObjectCode(statement);
-		SearchAttributeCode attribute = parseAttributeCode(statement);
+        SearchAttributeCode attribute = parseAttributeCode(statement);
 
 		/* parameters */
-		QRegExp regex_params = QRegExp("\\{(.+)\\}");
-		if (regex_params.indexIn(statement) != -1)
-			query->parseReturnParameters(regex_params.cap(1));
+        QRegularExpression regex_params("\\{(.+)\\}");
+        auto match = regex_params.match(statement);
+
+        if (match.hasMatch())
+            query->parseReturnParameters(match.captured(1));
 
 		query->setReturnCode(object, attribute);
 	}
@@ -172,7 +185,7 @@ void QueryParser::parseFromStatement(Query *query, QString statement)
 	}
 	else
 	{
-		foreach (QString path, statement.split(QRegExp("\\s*,\\s*")))
+        foreach (QString path, statement.split(QRegularExpression("\\s*,\\s*")))
 			files << project->file(path);
 	}
 
@@ -183,7 +196,7 @@ void QueryParser::parseWhereStatement(Query *query, QString statement)
 {
 	QStringList parts, data_tokens, meta_tokens;
 
-	parts = statement.split(QRegExp("\\s*&&\\s*")); // separate data and metadata
+    parts = statement.split(QRegularExpression("\\s*&&\\s*")); // separate data and metadata
 
 	if (parts.size() != 2)
 	{
@@ -259,8 +272,8 @@ SearchAttributeCode QueryParser::parseAttributeCode(QString statement)
 	else if (statement.endsWith(".description"))
 		attr = DescriptionAttribute;
 
-	else if (statement.endsWith(".crosstext"))
-		attr = CrossTextAttribute;
+    else if (statement.endsWith(".crosstext"))
+        attr = CrossTextAttribute;
 
 	return attr;
 }
@@ -326,8 +339,15 @@ SearchNode* QueryParser::buildSearchNode(QStringList &tokens)
 
 		/* boolean operators */
 
-		else if (token == "AND")
+        else if (token.startsWith("AND"))
+        {
 			currentNode->setOpcode(AndOperator);
+            auto parts = token.split(":");
+
+            if (parts.size() == 2) {
+                currentNode->setCrossTierSpecifier(parts.at(1));
+            }
+        }
 
 		else if (token == "OR")
 			currentNode->setOpcode(OrOperator);
@@ -369,14 +389,17 @@ SearchNode* QueryParser::buildSearchNode(QStringList &tokens)
 		else
 		{
 			currentNode->setObjectCode(parseObjectCode(token));
-			currentNode->setAttributeCode(parseAttributeCode(token));
+            currentNode->setAttributeCode(parseAttributeCode(token));
 		}
 
 		/* parameters */
-		QRegExp regex_params = QRegExp("\\{(.+)\\}");
-		if (regex_params.indexIn(token) != -1)
+        QRegularExpression regex_params("\\{(.+)\\}");
+        auto match = regex_params.match(token);
+
+        if (match.hasMatch())
 		{
-			QString txt = regex_params.cap(1);
+            // Tier name or number.
+            QString txt = match.captured(1);
             if (txt.startsWith("$")) // look for a text variable $item{$tier_name}.text
             {
                 txt.remove(0,1);
@@ -409,7 +432,7 @@ QStringList QueryParser::tokenizeString(QString statement)
     statement.replace(">  =", ">=");
 	statement.replace('~', " ~ ");
 
-	return statement.split(QRegExp("\\s+"));
+    return statement.split(QRegularExpression("\\s+"));
 }
 
 QString QueryParser::error()

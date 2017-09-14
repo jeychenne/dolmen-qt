@@ -100,8 +100,11 @@ private:
 	// For each search line, we use a QHBoxLayout that contains:
 	// - a DmLineEdit (text)
 	// - a QSpinBox (search tier)
+    // - a QComboBox (relation, since Dolmen 1.9.1)
     QList<DMLineEdit*> search_line_list, tier_name_list;
     QList<QSpinBox*>   tier_spinbox_list;
+    QList<QComboBox*>  tier_relation_list;
+
 	// display tier in cross-tier search
     QSpinBox          *displayTier_spinbox;
     QLabel            *displayTier_label; // hide in single-tier search
@@ -110,6 +113,7 @@ private:
     QToolButton       *showHideProperties_arrow;
     QLabel            *showHideProperties_label;
 
+    QLineEdit         *separator_line;
 
     QList<CheckListBox*>     categoryList; // store regular categories
 	QList<NumericValueEdit*> numCategoryList; // store numeric categories
@@ -139,6 +143,8 @@ private:
 	void applySpecialModes(QString &text, int tier);
     void setupPropertyArrow();
     bool hasGrammar() const;
+
+    QString getSeparator() const;
 };
 
 #endif // SEARCHWINDOW_H

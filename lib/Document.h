@@ -41,8 +41,8 @@ public:
     void open();
     QString metadataAsHtml(bool withDescription = true) const;
     QString text() const;
-    QString leftCotext(int pos) const;
-    QString rightCotext(int pos) const;
+    QString leftCotext(int pos, const QString &separator) const;
+    QString rightCotext(int pos, const QString &separator) const;
 
 
 private:

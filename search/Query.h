@@ -64,10 +64,11 @@ public:
 	QList<DFile*> files() const;
 	QString toString() const;
     QList<SearchMatchPtr>& results();
-
+    QString separator() const;
+    void setSeparator(const QString &separator);
 
 private:
-	// 0-based index of the object to search when there are several (tiers, items, etc.)
+    // 0-based index of the object to search when there are several (tiers, items, etc.)
 	// If listIndex == -1, search all objects; if listIndex == -2, cross-tier search
     int                  list_index;
     QPair<int,int>       return_parameters;
@@ -84,10 +85,11 @@ private:
     Grammar              *m_grammar;
     QStringList          m_annotators;
     QString              m_ref_annotator;
+    QString              m_separator; // separate items in the result of a cross-tier display.
 
 	// depth-first search
 	QSet<DFile*> searchMetaTree(SearchNode *node, QSet<DFile*> files);
-    QSet<SearchMatchPtr> searchDataTree(SearchNode *node, QSet<SearchMatchPtr> results = QSet<SearchMatchPtr>());
+    QSet<SearchMatchPtr> searchDataTree(SearchNode *node, QSet<SearchMatchPtr> results = QSet<SearchMatchPtr>(), SearchTierRelation relation = NullRelation);
 
 	// display of cross-text in cross-tier search
 	void applyCrossTextDisplay();
@@ -107,8 +109,8 @@ private:
     void groupSearchMatches();
 
 	// find all matches in a file (pass results for cross-tier search)
-    QSet<SearchMatchPtr> searchFile(SearchNode *node, DFile *file, QSet<SearchMatchPtr> results);
-    QSet<SearchMatchPtr> searchItem_text(SearchNode *node, Annotation *file, QSet<SearchMatchPtr> results);
+    QSet<SearchMatchPtr> searchFile(SearchNode *node, DFile *file, QSet<SearchMatchPtr> results, SearchTierRelation relation);
+    QSet<SearchMatchPtr> searchItem_text(SearchNode *node, Annotation *file, QSet<SearchMatchPtr> results, SearchTierRelation relation);
     QSet<SearchMatchPtr> searchDocument_text(SearchNode *node, Document *file, QSet<SearchMatchPtr> results);
 
 };

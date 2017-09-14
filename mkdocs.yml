@@ -4,6 +4,10 @@ use_directory_urls: false
 pages:
 - Getting started: index.md
 
+- Concordancer:
+    - Simple queries: conc/simple.md
+    - Complex queries: conc/complex.md
+    
 - Scripting:
     - Overview: scripting/index.md
     - Plugins: scripting/plugins.md

@@ -42,11 +42,11 @@ public:
 	DSpan();
 	DSpan(double start, double end, const QString &text);
 
-	double left();
-	double right();
+    double left() const override;
+    double right() const override;
 
-	bool precedes(Item *item);
-	bool follows(Item *item);
+    bool precedes(Item *item) const override;
+    bool follows(Item *item) const override;
 
 	double start() const;
 	void setStart(double);

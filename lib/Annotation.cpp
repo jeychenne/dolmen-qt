@@ -23,7 +23,7 @@
  * Created: 01/09/10
  */
 
-#include <QRegExp>
+#include <algorithm>
 #include <QRegularExpression>
 #include "Annotation.h"
 
@@ -101,7 +101,40 @@ Tier* Annotation::tier(int no)
 		return NULL;
 	}
 
-	return m_tiers[no];
+    return m_tiers[no];
+}
+
+struct ItemLessThan
+{
+    bool operator()(Item* const &i1, Item* const &i2) const
+    {
+        return i1->left() < i2->left();
+    }
+};
+
+Item *Annotation::nextItem(int tier_no, Item *item)
+{
+    auto tier = m_tiers.at(tier_no);
+    auto items = tier->items();
+
+    for (int i = 0; i < items.size()-1; ++i)
+    {
+        if (items.at(i) == item) {
+            return items.at(i+1);
+        }
+    }
+
+    return nullptr;
+
+    //FIXME: doesn't seem to work...
+//    auto it = std::lower_bound(items.cbegin(), items.cend(), item, ItemLessThan());
+
+//    if (it == items.end()) {
+//        return nullptr;
+//    }
+//    else {
+//        return *it;
+//    }
 }
 
 void Annotation::addNewTier(const QString &label, tier_type_t t, int pos)
@@ -139,7 +172,7 @@ dm_annotation_type_t Annotation::type() const
     return m_type;
 }
 
-QString Annotation::leftCotext(int tier, int item, int pos)
+QString Annotation::leftCotext(int tier, int item, int pos, const QString &separator)
 {
 	QString cotext = m_tiers[tier]->item(item)->text().left(pos);
 	cotext = cotext.right(Global::MatchCotextLength);
@@ -152,7 +185,7 @@ QString Annotation::leftCotext(int tier, int item, int pos)
 			cotext = cotext.rightJustified(Global::MatchCotextLength);
 		else
 		{
-			cotext = m_tiers[tier]->item(item)->text() + TIER_BOUNDARY + cotext;
+            cotext = m_tiers[tier]->item(item)->text() + separator + cotext;
 			cotext = cotext.right(Global::MatchCotextLength);
 			cotext.replace("  ", " ");
 		}
@@ -161,7 +194,7 @@ QString Annotation::leftCotext(int tier, int item, int pos)
 	return cotext;
 }
 
-QString Annotation::rightCotext(int tier, int item, int pos)
+QString Annotation::rightCotext(int tier, int item, int pos, const QString &separator)
 {
 	QString txt = m_tiers[tier]->item(item)->text();
 	QString cotext = txt.right(txt.size()-pos);
@@ -175,7 +208,7 @@ QString Annotation::rightCotext(int tier, int item, int pos)
 			cotext = cotext.leftJustified(Global::MatchCotextLength);
 		else
 		{
-			cotext += TIER_BOUNDARY + m_tiers[tier]->item(item)->text();
+            cotext += separator + m_tiers[tier]->item(item)->text();
 			cotext = cotext.left(Global::MatchCotextLength);
 			cotext.replace("  ", " ");
 		}
@@ -185,11 +218,11 @@ QString Annotation::rightCotext(int tier, int item, int pos)
 }
 
 
-GraphNode * Annotation::graphNode(DSpan *root, int targetTier) const
+std::unique_ptr<GraphNode> Annotation::graphNode(Item *root, int targetTier) const
 {
 	int i;
 	Q_ASSERT(targetTier < m_tiers.size());
-	GraphNode *node = new GraphNode(root);
+    auto node = std::make_unique<GraphNode>(root);
 	Tier *tier = m_tiers.at(targetTier);
 	if (!tier) return NULL;
 	// get inner items
@@ -201,21 +234,21 @@ GraphNode * Annotation::graphNode(DSpan *root, int targetTier) const
 
 	if (firstItem->right() > root->right() || lastItem->left() < root->left())
 	{
-		delete node; return NULL;
+        return NULL;
 	}
 
 	long lindex = tier->indexOf(firstItem);
-	long rindex = tier->indexOf(lastItem) + 1;
+    long rindex = tier->indexOf(lastItem);
 
-	for (i = lindex; i < rindex; ++i)
-	{// qDebug("adding daughter in graphnode(): %d", i);
-		node->addDaughter(tier->item(i));}
+    for (i = lindex; i <= rindex; ++i) {
+        node->addDaughter(tier->item(i));
+    }
 
 	return node;
 }
 
 // Find tier by name
-GraphNode * Annotation::graphNode(DSpan *root, QString tierName) const
+std::unique_ptr<GraphNode> Annotation::graphNode(Item *root, QString tierName) const
 {
     for (int i = 0; i < m_tiers.size(); ++i)
     {
@@ -224,6 +257,26 @@ GraphNode * Annotation::graphNode(DSpan *root, QString tierName) const
     }
 
     return NULL;
+}
+
+QString Annotation::getTextSpan(int tier_no, double start, double end, const QString &separator) const
+{
+    QString text;
+    Tier *tier = m_tiers.at(tier_no);
+    Item *firstItem = tier->rightmostItemAtTime(start);
+    Item *lastItem  = tier->leftmostItemAtTime(end);
+    long lindex = tier->indexOf(firstItem);
+    long rindex = tier->indexOf(lastItem);
+
+    for (long i = lindex; i <= rindex; ++i)
+    {
+        text.append(tier->item(i)->text());
+        if (i < rindex) {
+            text.append(separator);
+        }
+    }
+
+    return text;
 }
 
 
@@ -767,18 +820,18 @@ void Annotation::parsePfcPath()
 {
 	QFileInfo info(m_path);
 	QString base = info.baseName();
-    QRegExp regex("(.+)(...)([lgmt])(gx?)");
-	int pos = regex.indexIn(base);
+    QRegularExpression regex("(.+)(...)([lgmt])(gx?)");
+    auto match = regex.match(base);
 	QString soundFile;
 
-	if (pos != -1)
+    if (match.hasMatch())
 	{
 		QString survey, speaker, task, supplement;
 
-		survey = regex.cap(1);
-		speaker = survey + regex.cap(2);
-		task = regex.cap(3);
-		supplement = regex.cap(4);
+        survey = match.captured(1);
+        speaker = survey + match.captured(2);
+        task = match.captured(3);
+        supplement = match.captured(4);
 
 		// build base path of the sound file
 		soundFile = info.path();
@@ -818,18 +871,18 @@ void Annotation::parsePacPath()
 {
 	QFileInfo info(m_path);
 	QString base = info.baseName();
-	QRegExp regex("(.+)(...)([vcfit])(gx?)");
-	int pos = regex.indexIn(base);
+    QRegularExpression regex("(.+)(...)([vcfit])(gx?)");
+    auto match = regex.match(base);
 	QString soundFile;
 
-	if (pos != -1)
+    if (match.hasMatch())
 	{
 		QString survey, speaker, task, supplement;
 
-		survey = regex.cap(1);
-		speaker = survey + regex.cap(2);
-		task = regex.cap(3);
-		supplement = regex.cap(4);
+        survey = match.captured(1);
+        speaker = survey + match.captured(2);
+        task = match.captured(3);
+        supplement = match.captured(4);
 
 		// build base path of the sound file
 		soundFile = info.path();

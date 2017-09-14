@@ -37,7 +37,8 @@ struct MatchLess {
 
 
 
-Query::Query(QString searchString, Grammar *gr)
+Query::Query(QString searchString, Grammar *gr) :
+    m_separator(" ")
 {
 	this->search_string = searchString;
 	list_index = -1; // by default, search all objects
@@ -127,14 +128,10 @@ void Query::run()
         QProgressDialog progress(tr("Loading annotations..."), QString(), 0, size, NULL);
         progress.setWindowModality(Qt::WindowModal);
 
-        foreach (DFile *f, m_files)
+        for (DFile *f : m_files)
         {
             progress.setValue(counter++);
-
-            if (!f->isOpen())
-            {
-                 f->open();
-            }
+            f->open();
         }
         progress.setValue(size);
 
@@ -229,9 +226,19 @@ QList<SearchMatchPtr>& Query::results()
 	return m_results;
 }
 
+QString Query::separator() const
+{
+    return m_separator;
+}
+
+void Query::setSeparator(const QString &separator)
+{
+    m_separator = separator;
+}
+
 void Query::setListIndex(int index)
 {
-	list_index = index - 1; // list indices are 1-based in the GUI but 0-based in a project
+    list_index = index - 1; // list indices are 1-based in the GUI but 0-based in a project
 }
 
 
@@ -315,8 +322,11 @@ QSet<DFile*> Query::searchMetaTree(SearchNode *node, QSet<DFile *> files)
 		return files.subtract(subset);
 }
 
-QSet<SearchMatchPtr> Query::searchDataTree(SearchNode *node, QSet<SearchMatchPtr> results)
+QSet<SearchMatchPtr> Query::searchDataTree(SearchNode *node, QSet<SearchMatchPtr> results, SearchTierRelation relation)
 {
+    // The logical node AND bears the relation in a cross-tier search, but it needs to be percolated to the right daughter
+    // because it will try to find submatches based on the previous tier's matches.
+
     QSet<SearchMatchPtr> subset;
 
 	switch (node->opcode())
@@ -324,7 +334,7 @@ QSet<SearchMatchPtr> Query::searchDataTree(SearchNode *node, QSet<SearchMatchPtr
 	case AndOperator:
 		subset = results;
 		for (int d = 0; d < node->countDaughters(); d++)
-			subset = searchDataTree(node->daughter(d), subset); // intersect
+            subset = searchDataTree(node->daughter(d), subset, node->crossTierSpecifier()); // intersect
 		break;
 
 	case OrOperator:
@@ -333,9 +343,9 @@ QSet<SearchMatchPtr> Query::searchDataTree(SearchNode *node, QSet<SearchMatchPtr
 		break;
 
 	case EqualOperator: case MatchOperator:
-        foreach(DFile *file, m_files)
+        for (DFile *file : m_files)
 		{
-            QSet<SearchMatchPtr> matches = searchFile(node, file, results);
+            QSet<SearchMatchPtr> matches = searchFile(node, file, results, relation);
 
 			if (! matches.isEmpty())
 				subset.unite(matches);
@@ -364,24 +374,23 @@ void Query::applyCrossTextDisplay()
 
     QList<SearchMatchPtr> newResults;
 
-    foreach (auto &match, m_results)
+    for (auto &match : m_results)
 	{
-		Item *item = match->item();
-		if (isInstance(item, DSpan))
-		{
-			DSpan *span = qobject_cast<DSpan*>(item);
-			Annotation *annot = qobject_cast<Annotation*>(match->file());
-			GraphNode *node = annot->graphNode(span, return_parameters.second);
-			QStringList texts = QStringList();
+        double start = match->itemStart();
+        double end = match->itemEnd();
+        Annotation *annot = qobject_cast<Annotation*>(match->file());
+        QString text = annot->getTextSpan(return_parameters.second, start, end, separator());
+        newResults << make_shared<SearchMatch>(annot, match->items(), match->tier0(), text);
 
-			foreach(Vertex *v, node->daughters())
-			{
-				Item *i = static_cast<Item*>(v);
-				texts << i->text();
-			}
+//        Item *item = match->lastItem();
 
-            newResults << make_shared<SearchMatch>(annot, span, match->tier0(), texts.join(" "));
-		}
+//		if (isInstance(item, DSpan))
+//		{
+//			DSpan *span = qobject_cast<DSpan*>(item);
+//			Annotation *annot = qobject_cast<Annotation*>(match->file());
+//            QString text = annot->getTextSpan(return_parameters.second, span->left(), span->right(), separator());
+//            newResults << make_shared<SearchMatch>(annot, span, match->tier0(), text); // texts.join(" "));
+//		}
 	}
 
 	m_results = newResults;
@@ -548,7 +557,7 @@ bool Query::testAttribute_text(SearchNode *node, DFile *file)
 
 /* SEARCH FILE */
 
-QSet<SearchMatchPtr> Query::searchFile(SearchNode *node, DFile *file, QSet<SearchMatchPtr> results)
+QSet<SearchMatchPtr> Query::searchFile(SearchNode *node, DFile *file, QSet<SearchMatchPtr> results, SearchTierRelation relation)
 {
     //qDebug() << QString("searchFile() in %1").arg(file->path());
 
@@ -558,7 +567,7 @@ QSet<SearchMatchPtr> Query::searchFile(SearchNode *node, DFile *file, QSet<Searc
 		switch (node->attribute())
 		{
 		case TextAttribute:
-			return searchItem_text(node, static_cast<Annotation*>(file), results);
+            return searchItem_text(node, static_cast<Annotation*>(file), results, relation);
 		default:
 			break;
 		}
@@ -580,7 +589,7 @@ QSet<SearchMatchPtr> Query::searchFile(SearchNode *node, DFile *file, QSet<Searc
 }
 
 
-QSet<SearchMatchPtr> Query::searchItem_text(SearchNode *node, Annotation *annot, QSet<SearchMatchPtr> results)
+QSet<SearchMatchPtr> Query::searchItem_text(SearchNode *node, Annotation *annot, QSet<SearchMatchPtr> results, SearchTierRelation relation)
 {
     QSet<SearchMatchPtr> matches;
 	Tier *tier;
@@ -603,6 +612,7 @@ QSet<SearchMatchPtr> Query::searchItem_text(SearchNode *node, Annotation *annot,
 	// cross-tier search
 	if (list_index == -2 && results.size() != 0)
 	{
+        assert(relation != NullRelation);
         int tier_no = node->tierIndex();
 
 		if (tier_no >= annot->tiers().size())
@@ -611,33 +621,129 @@ QSet<SearchMatchPtr> Query::searchItem_text(SearchNode *node, Annotation *annot,
 			return matches;
 		}
 
-		// get all daughters of the SearchMatch's item. If a daughter matches the search text,
-		// add SearchMatch to matches.
-        auto re = buildPattern(node->value());
+        if (relation == AlignmentRelation)
+        {
+            QRegularExpression pattern;
 
-        foreach(auto &match, results)
-		{
-			if (match->file() != annot)
-				continue;
+            if (node->opcode() == MatchOperator) {
+                pattern = buildPattern(node->value());
+            }
 
-			DSpan *span  = qobject_cast<DSpan*>(match->item());
-            qDebug() << "Cross search, tier no: " << tier_no+1;
-			GraphNode *gnode = annot->graphNode(span, tier_no);
-			if (! gnode) continue;
+            for (auto &match : results)
+            {
+                if (match->file() != annot)
+                    continue;
 
-			foreach(Vertex *v, gnode->daughters())
-			{
-				Item *item = static_cast<Item*>(v);
-                auto re_match = re.match(item->text());
+                Item *item = match->lastItem();
+                auto gnode = annot->graphNode(item, tier_no);
+                if (! gnode) continue;
 
-                if (re_match.hasMatch())
+                auto daughters = gnode->daughters();
+                if (daughters.size() != 1) continue;
+
+                Item *other_item = static_cast<Item*>(daughters.at(0));
+                if (item->left() != other_item->left() || item->right() != other_item->right()) {
+                    continue;
+                }
+
+                // We now have two items strictly aligned -> check that the text of the second matches.
+                if (node->opcode() == MatchOperator)
                 {
-					matches << match;
-					break;
-				}
-			}
-			delete gnode;
-		}
+                    auto re_match = pattern.match(other_item->text());
+
+                    if (re_match.hasMatch()) {
+                        matches << match;
+                    }
+                }
+                else if (node->opcode() == EqualOperator)
+                {
+                    if (node->value() == other_item->text()) {
+                        matches << match;
+                    }
+                }
+            }
+        }
+        else if (relation == PrecedenceRelation)
+        {
+            QRegularExpression pattern;
+
+            if (node->opcode() == MatchOperator) {
+                pattern = buildPattern(node->value());
+            }
+
+            for (auto &match : results)
+            {
+                Item *item = match->lastItem();
+                Item *next_item = annot->nextItem(tier_no, item);
+
+                if (next_item == nullptr) {
+                    continue;
+                }
+
+                if (node->opcode() == MatchOperator)
+                {
+                    auto re_match = pattern.match(next_item->text());
+
+                    if (re_match.hasMatch())
+                    {
+                        match->addItem(next_item);
+                        matches << match;
+                    }
+                }
+                else if (node->opcode() == EqualOperator)
+                {
+                    if (node->value() == next_item->text())
+                    {
+                        match->addItem(next_item);
+                        matches << match;
+                    }
+                }
+            }
+        }
+        if (relation == DominanceRelation)
+        {
+            QRegularExpression re;
+
+            if (node->opcode() == MatchOperator) {
+                re = buildPattern(node->value());
+            }
+
+            for (auto &match : results)
+            {
+                if (match->file() != annot) {
+                    continue;
+                }
+
+                Item *item  = match->lastItem();
+                //qDebug() << "Cross search, tier no: " << tier_no+1;
+                auto gnode = annot->graphNode(item, tier_no);
+                if (! gnode) continue;
+                auto daughters = gnode->daughters();
+
+                // If a daughter matches the search text, add SearchMatch to matches.
+                for (Vertex *v : daughters)
+                {
+                    Item *sub_item = static_cast<Item*>(v);
+
+                    if (node->opcode() == MatchOperator)
+                    {
+                        auto re_match = re.match(sub_item->text());
+
+                        if (re_match.hasMatch()) {
+                            matches << match;
+                            break;
+                        }
+                    }
+                    else if (node->opcode() == EqualOperator)
+                    {
+                        if (node->value() == sub_item->text()) {
+                            matches << match;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 	}
 	// pass if there are no matches in the 1st tier of a cross-tier search
 	else if (list_index == -2 && start != return_parameters.first) {}
@@ -682,9 +788,9 @@ QSet<SearchMatchPtr> Query::searchItem_text(SearchNode *node, Annotation *annot,
                     while ((re_match = pattern.match(items[j]->text(), pos)).hasMatch())
 					{
                         QString match = re_match.captured(0);
-                        QString left  = annot->leftCotext(tier_no, j, re_match.capturedStart());
+                        QString left  = annot->leftCotext(tier_no, j, re_match.capturedStart(), separator());
                         pos = re_match.capturedEnd();
-                        QString right = annot->rightCotext(tier_no, j, pos);
+                        QString right = annot->rightCotext(tier_no, j, pos, separator());
 
                         SearchMatchPtr m = make_shared<SearchMatch>(annot, items[j], tier_no, match, left, right);
                         m->setNth(nth++);
@@ -729,9 +835,9 @@ QSet<SearchMatchPtr> Query::searchDocument_text(SearchNode *node, Document *file
         {
             pos = re_match.capturedEnd();
             QString match = re_match.captured(0);
-            QString left  = file->leftCotext(re_match.capturedStart());
+            QString left  = file->leftCotext(re_match.capturedStart(), separator());
             pos = re_match.capturedEnd(); // update position in the string
-            QString right = file->rightCotext(pos);
+            QString right = file->rightCotext(pos, separator());
 
             matches << make_shared<SearchMatch>(file, match, left, right);
         }

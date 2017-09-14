@@ -36,6 +36,7 @@ SearchNode::SearchNode(SearchNode *mother)
 	m_truth = true;
     m_tier_no = -1;
     m_search_by_name = false;
+    m_cross_tier_spec = NullRelation;
 }
 
 SearchNode* SearchNode::mother()
@@ -131,10 +132,28 @@ QString SearchNode::tierName() const
     return m_tier_name;
 }
 
-void SearchNode::setTierName(QString &name)
+void SearchNode::setTierName(const QString &name)
 {
     m_tier_name = name;
     m_search_by_name = true;
+}
+
+SearchTierRelation SearchNode::crossTierSpecifier() const
+{
+    return m_cross_tier_spec;
+}
+
+void SearchNode::setCrossTierSpecifier(const QString &value)
+{
+    if (value == "align") {
+        m_cross_tier_spec = AlignmentRelation;
+    }
+    else if (value == "prec") {
+        m_cross_tier_spec = PrecedenceRelation;
+    }
+    else if (value == "dom") {
+        m_cross_tier_spec = DominanceRelation;
+    }
 }
 
 bool SearchNode::searchByName() const

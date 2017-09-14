@@ -1,6 +1,12 @@
 ## Changelog for Dolmen
 
-### Version 1.9 (25/8/2017)
+### Version 1.9.1 (14/9/2017)
+
+* Complex queries now recognizes 3 relations: alignment, precedence and dominance
+* Updated documentation for concordancing
+* Better warning when a query doesn't return any match
+
+### Version 1.9.0 (25/8/2017)
 
 * Small changes in the user interface
 * lua scripting engine
@@ -259,5 +265,5 @@ Bug fixes/improvements:
 * First public version.
 
 
-Development of the C++ version started in early August 2011. A python proof-of-concept was sketched out in April/May 2011
+Development of the C++ version started in early August 2010. A python proof-of-concept was sketched out in April/May 2010.
 Dolmen is a complete redesign of the PFC platform (2006/2008), a concordancer implemented in Python and specifically written for the PFC project (www.projet-pfc.net). 

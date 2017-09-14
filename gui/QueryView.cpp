@@ -194,8 +194,8 @@ void QueryView::displayMatchContextMenu(const QPoint &pos)
         QAction *csvAction = new QAction(tr("Export results to tab-separated file (CSV)..."), this);
         menu.addAction(csvAction);
 
-        QAction *writeOutputAction = new QAction(tr("Copy all matches to output tab"), this);
-        menu.addAction(writeOutputAction);
+//        QAction *writeOutputAction = new QAction(tr("Copy all matches to output tab"), this);
+//        menu.addAction(writeOutputAction);
         menu.addSeparator();
 
         QAction *bookmarkAction = new QAction(tr("Bookmark search result..."), this);
@@ -204,7 +204,7 @@ void QueryView::displayMatchContextMenu(const QPoint &pos)
     #endif
         menu.addAction(bookmarkAction);
 
-        connect(writeOutputAction, SIGNAL(triggered()), this, SLOT(writeMatchesToOutput()));
+        //connect(writeOutputAction, SIGNAL(triggered()), this, SLOT(writeMatchesToOutput()));
         connect(csvAction, SIGNAL(triggered()), this, SLOT(exportMatchesToCsv()));
         connect(tableAction, SIGNAL(triggered()), this, SLOT(createDataTable()));
         connect(bookmarkAction, SIGNAL(triggered()), this, SLOT(createBookmark()));
@@ -293,21 +293,21 @@ void QueryView::onItemClicked()
     }
     else properties_txt = "";
 
-    if (match->item() && isInstance(match->item(), DSpan))
+    if (match->lastItem() && isInstance(match->lastItem(), DSpan))
 	{
-		DSpan *span = qobject_cast<DSpan*>(match->item());
+		DSpan *span = qobject_cast<DSpan*>(match->lastItem());
         start_txt = "<strong>Start: </strong>" + dm_time2string(span->start());
         end_txt   = "<strong>End: </strong>" + dm_time2string(span->end());
 	}
-    else if (match->item() && isInstance(match->item(), DPoint))
+    else if (match->lastItem() && isInstance(match->lastItem(), DPoint))
 	{
-		DPoint *point = qobject_cast<DPoint*>(match->item());
+		DPoint *point = qobject_cast<DPoint*>(match->lastItem());
 
         start_txt = "<strong>Time: </strong>" + dm_time2string(point->time());
         end_txt   = "";
 	}
 
-    if (match->item())
+    if (match->lastItem())
         emit itemMatchMetadata(file_txt, properties_txt, start_txt, end_txt);
     else
         emit textMatchMetadata(file_txt, properties_txt);
@@ -326,11 +326,11 @@ void QueryView::editItem()
 	bool ok;
 	QString text = QInputDialog::getText(this, tr("Edit item"),
 										  tr("New text"), QLineEdit::Normal,
-										  match->item()->text(), &ok);
+										  match->lastItem()->text(), &ok);
 
 	if (ok)
 	{
-		match->item()->setText(text);
+		match->lastItem()->setText(text);
 		match->file()->modifiedExternally();
 	}
 }
@@ -365,7 +365,7 @@ void QueryView::playMatch(SearchMatch *match)
 
     if (current_sound)
 	{
-		Item *item =  match->item();
+		Item *item =  match->lastItem();
 		double start = item->left();
 		double end = item->right();
 
@@ -390,8 +390,8 @@ void QueryView::openCurrentMatchInPraat()
 		soundPath = annot->soundFile()->path();
 
 	if (praat)
-        praat->openInterval(match->tier(), match->item()->left(), annot->path(), soundPath);
-    qDebug() << "ITEM" << match->item()->left() << match->item()->right() << match->item()->text();
+        praat->openInterval(match->tier(), match->lastItem()->left(), annot->path(), soundPath);
+    qDebug() << "ITEM" << match->lastItem()->left() << match->lastItem()->right() << match->lastItem()->text();
 }
 
 void QueryView::openCurrentMatch()
@@ -400,7 +400,7 @@ void QueryView::openCurrentMatch()
 	Annotation *annot = qobject_cast<Annotation*>(match->file());
 
 	if (annot->soundFile())
-		emit openMatch(annot, match->tier0(), match->item()->left(), match->item()->right());
+		emit openMatch(annot, match->tier0(), match->lastItem()->left(), match->lastItem()->right());
 
 }
 
@@ -539,8 +539,8 @@ QList<QStringList> QueryView::matchesToTable(bool toCsv)
 
         if (fileIsAnnotation)
         {
-            row	<< quote + QString::number(m->item()->left()) + quote
-                << quote + QString::number(m->item()->right()) + quote;
+            row	<< quote + QString::number(m->lastItem()->left()) + quote
+                << quote + QString::number(m->lastItem()->right()) + quote;
         }
 
         // write match with its context

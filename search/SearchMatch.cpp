@@ -36,7 +36,7 @@ SearchMatch::SearchMatch(DFile *file, Item *item, int tier, double match) :
 	Bookmark()
 {
     m_dfile     = file;
-    matched_item = item;
+    m_items.append(item);
     m_match     = QString::number(match);
     m_left      = m_right = "";
     m_nth_match = 1;
@@ -44,16 +44,24 @@ SearchMatch::SearchMatch(DFile *file, Item *item, int tier, double match) :
     m_siblings  = QList<SearchMatchPtr>();
 }
 
+SearchMatch::SearchMatch(DFile *file, QList<Item*> items, int tier, QString match)
+{
+    m_dfile     = file;
+    m_items     = std::move(items);
+    m_match     = match;
+    m_tier      = tier;
+    m_nth_match = 1;
+}
+
 SearchMatch::SearchMatch(DFile *file, Item *item, int tier, QString match, QString left, QString right)
 {
     m_dfile     = file;
-    matched_item = item;
+    m_items.append(item);
     m_match     = match;
     m_left      = left;
     m_right     = right;
     m_tier      = tier;
     m_nth_match = 1;
-    m_siblings  = QList<SearchMatchPtr>();
 }
 
 SearchMatch::SearchMatch(DFile *file, QString match, QString left, QString right)
@@ -62,7 +70,6 @@ SearchMatch::SearchMatch(DFile *file, QString match, QString left, QString right
     m_match     = match;
     m_left      = left;
     m_right     = right;
-    matched_item = NULL;
     m_tier      = -1;
     m_nth_match = 1;
     m_siblings  = QList<SearchMatchPtr>();
@@ -204,16 +211,16 @@ QString SearchMatch::right() const
 
 double SearchMatch::itemStart() const
 {
-    if (matched_item)
-        return matched_item->left();
+    if (!m_items.empty())
+        return firstItem()->left();
     else
         return -1.0;
 }
 
 double SearchMatch::itemEnd() const
 {
-    if (matched_item)
-        return matched_item->right();
+    if (!m_items.empty())
+        return lastItem()->right();
     else
         return -1.0;
 }
@@ -230,12 +237,27 @@ void SearchMatch::setNth(int n)
 
 DFile* SearchMatch::file() const
 {
-	return m_dfile;
+    return m_dfile;
 }
 
-Item* SearchMatch::item() const
+Item *SearchMatch::firstItem() const
 {
-    return matched_item;
+    return m_items.front();
+}
+
+Item* SearchMatch::lastItem() const
+{
+    return m_items.back();
+}
+
+void SearchMatch::addItem(Item *item)
+{
+    m_items.append(item);
+}
+
+QList<Item *> SearchMatch::items() const
+{
+    return m_items;
 }
 
 int SearchMatch::tier() const
@@ -261,7 +283,7 @@ void SearchMatch::openInPraat()
          Sound *snd = annot->soundFile();
          QString sound_path = snd ? snd->path() : QString();
 
-         Global::Praat->openInterval(tier(), matched_item->left() + 0.00001, annot->path(), sound_path);
+         Global::Praat->openInterval(tier(), lastItem()->left() + 0.00001, annot->path(), sound_path);
      }
      else
      {
@@ -315,8 +337,8 @@ bool SearchMatch::readFromXml(QXmlStreamReader *reader)
 			Annotation *a = qobject_cast<Annotation*>(m_dfile);
             a->open();
 
-			matched_item = a->tier(m_tier)->item(start, end);
-			if (! matched_item)
+            m_items.append(a->tier(m_tier)->item(start, end));
+            if (m_items.empty())
 			{
 				qDebug() << "Matched Item not found in " + path + QString("at %1 to %2").arg(start).arg(end);
 				return false;
@@ -366,11 +388,11 @@ void SearchMatch::writeToXml(QXmlStreamWriter *writer)
 	writer->writeEndElement(); // </Tier>
 
 	writer->writeStartElement("Start");
-	writer->writeCharacters(QString::number(matched_item->left(), 'f', 15));
+    writer->writeCharacters(QString::number(lastItem()->left(), 'f', 15));
 	writer->writeEndElement(); // </Start>
 
 	writer->writeStartElement("End");
-	writer->writeCharacters(QString::number(matched_item->right(), 'f', 15));
+    writer->writeCharacters(QString::number(lastItem()->right(), 'f', 15));
 	writer->writeEndElement(); // </End>
 
 	writer->writeEndElement(); // </Bookmark>
@@ -385,8 +407,8 @@ void SearchMatch::open()
 {
 	if (isInstance(m_dfile, Annotation))
 	{
-		double start = matched_item->left();
-		double end = matched_item->right();
+        double start = lastItem()->left();
+        double end = lastItem()->right();
 
 		if (start == end && start >= 0.5)
 		{

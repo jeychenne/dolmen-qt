@@ -1428,7 +1428,7 @@ std::vector<char32_t> string::codepoints() const
 string string::join(const std::vector<string> &strings, std::string_view separator)
 {
 	string result;
-	size_t size = 0;
+	size_t size = 1;
 
 	for (auto &s : strings) {
 		size += s.raw_size() + separator.size();

@@ -61,7 +61,8 @@ class SearchMatch : public QObject, public Bookmark
     Q_INTERFACES(Bookmark)
 
 public:
-    SearchMatch(DFile *file, Item* item, int tier, double match);
+    SearchMatch(DFile *file, Item* lastItem, int tier, double match);
+    SearchMatch(DFile *file, QList<Item *> items, int tier, QString match);
     SearchMatch(DFile *file, Item* item, int tier, QString match, QString left = "", QString right = "");
     SearchMatch(DFile *file, QString match, QString left = "", QString right = "");
     bool operator< (const SearchMatch &other) const;
@@ -80,7 +81,10 @@ public:
     bool      hasDivergingAnnotations(Grammar *grammar) const;
     QList<SearchMatchPtr> siblings() const;
     DFile*    file() const;
-    Item*     item() const;
+    Item*     firstItem() const;
+    Item*     lastItem() const;
+    void      addItem(Item *item);
+    QList<Item*> items() const;
     // Base 0 is used internally. Base 1 is user-visible (as used in Praat).
     // TODO: get rid of that, this was a bad idea...
     int tier0() const; // zero-based
@@ -103,11 +107,10 @@ signals:
 private:
     QString    m_match, m_left, m_right;
     DFile     *m_dfile;
-    Item      *matched_item;
+    QList<Item*> m_items; // sequence of matched items
     int        m_tier;
     int        m_nth_match; // nth match in item
     QList<SearchMatchPtr> m_siblings; // store (near-)identical matches when comparing annotators
-
 };
 
 

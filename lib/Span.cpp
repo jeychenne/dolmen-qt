@@ -39,17 +39,17 @@ DSpan::DSpan(double start, double end, const QString &text = "")
 }
 
 
-double DSpan::left()
+double DSpan::left() const
 {
     return m_start;
 }
 
-double DSpan::right()
+double DSpan::right() const
 {
     return m_end;
 }
 
-bool DSpan::precedes(Item *item)
+bool DSpan::precedes(Item *item) const
 {
     if ((isInstance(item, DSpan) && m_end <= item->left())
         || m_end < item->left())
@@ -58,7 +58,7 @@ bool DSpan::precedes(Item *item)
 		return false;
 }
 
-bool DSpan::follows(Item *item)
+bool DSpan::follows(Item *item) const
 {
     if ((isInstance(item, DSpan) && m_start >= item->right())
         || m_start > item->right())

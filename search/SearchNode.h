@@ -74,6 +74,14 @@ enum SearchAttributeCode
 	CrossTextAttribute	// text of a sequence of items
 };
 
+enum SearchTierRelation
+{
+    NullRelation,
+    AlignmentRelation,
+    PrecedenceRelation,
+    DominanceRelation
+};
+
 
 class SearchNode
 {
@@ -97,7 +105,9 @@ public:
 	void setValue(QString);
     int tierIndex() const;
     void setTierIndex(int);
-    void setTierName(QString &name);
+    void setTierName(const QString &name);
+    SearchTierRelation crossTierSpecifier() const;
+    void setCrossTierSpecifier(const QString &value);
     QString tierName() const;
     bool searchByName() const;
 
@@ -110,6 +120,7 @@ private:
     bool                m_truth;            // NOT operator
     SearchObjectCode    object_code;
     SearchAttributeCode attribute_code;
+    SearchTierRelation  m_cross_tier_spec;  // specify the relation between 2 tiers
     SearchNode         *m_mother;
     QList<SearchNode*>  m_daughters;
 };

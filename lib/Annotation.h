@@ -62,15 +62,19 @@ public:
 
     void open();
 
-	Item* getItem(int tier_no, int item_no);
+    Item* getItem(int tier_no, int item_no);
 	Tier* tier(int no);
+    Item* nextItem(int tier_no, Item *item);
     void addNewTier(const QString &label, tier_type_t t, int pos);
 	QList<Tier*> tiers();
     dm_annotation_type_t type() const;
 	int countTiers();
 	// create a sub-tree
-	GraphNode * graphNode(DSpan *root, int targetTier) const;
-    GraphNode * graphNode(DSpan *root, QString tierName) const;
+    std::unique_ptr<GraphNode> graphNode(Item *root, int targetTier) const;
+    std::unique_ptr<GraphNode> graphNode(Item *root, QString tierName) const;
+
+    // Get the concatenated text of a sequence of items.
+    QString getTextSpan(int tier_no, double start, double end, const QString &separator) const;
 
 	bool isNative();
 	// ensure the whole file is written as DMF
@@ -91,8 +95,8 @@ public:
 	QString metadataAsHtml(bool withDescription = true) const;
 
 	// get match in context
-	QString leftCotext(int tier, int item, int pos); // pos == start of match
-	QString rightCotext(int tier, int item, int pos); // pos == end of match
+    QString leftCotext(int tier, int item, int pos, const QString &separator); // pos == start of match
+    QString rightCotext(int tier, int item, int pos, const QString &separator); // pos == end of match
 
 	// Additional properties based on the file name for the PFC and PAC projects.
     void parsePfcPath();

@@ -1,7 +1,7 @@
 /*
- * SearchEngine.h
+ * QueryParser.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne 
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -26,7 +26,7 @@
  * This allows queries to be easily remembered and saved, for instance to display
  * frequently used subsets of the corpus.
  * A query can search and/or return any (registered) object or attribute from a
- * file. Objects are preceded by '@' and its attributes are accessed using
+ * file. Objects are preceded by '@' and their attributes are accessed using
  * the dot notation (e.g. @item.text --> "text of an Item object").
  *
  * Syntax:
@@ -43,17 +43,27 @@
  * The RETURN value is always a list of type return_val. Importantly, the SEARCH object and the
  * RETURN object need not be the same. A typical case is when a user wants to retrieve the value
  * of a particular attribute in an object (e.g. "get the start of the 5th span").
+ * Since version 1.9.1, it directly followed by a separator between angle brackets. This is used to
+ * join items in the query view. Note that space characters are replaced with "%SPACE%" so that the
+ * separator can be properly parsed by the query parser.
  *
  * Example:
- *     SEARCH @tier[3] FROM vfile1, vfile2 WHERE (@item.text ~ "e141[34]") && () RETURN @item.text;
+ *     SEARCH @tier[3] FROM vfile1, vfile2 WHERE (@item.text ~ "e141[34]") && () RETURN <%SPACE%> @item.text;
 
- Extension for cross-tier search:
+ Extensions for cross-tier search:
  - use 'x' instead of number for the @tier object to signal a cross-tier search
  - use braces {} to pass parameters to objects. For instance, "@item{1}.text" is the text of an item
  in the first tier.
 
+since version 1.9.1, we distinguish 3 relations, indicated with a new specifier:
+ - :align -> alignment, where 2 items are strictly aligned on different tiers
+ - :prec   -> precedence, where 2 items follow each other on the same tier
+ - :dom -> dominance, where 1 item strictly dominates another one on a different tier
+
+The specifier precedes the AND operator in data part of a WHERE statement.
+
 Example:
-     SEARCH @tier[x] FROM ... WHERE ((@item{1}.text ~ "e141[34]") AND (@item{3}.text ~ "e141[34]")) && () RETURN @graphnode{4}.crosstext;
+     SEARCH @tier[x] FROM ... WHERE ((@item{1}.text ~ "e141[34]") AND:align (@item{3}.text ~ "e141[34]")) && () RETURN @graphnode{4}.crosstext;
 Another RETURN object: @graphnode = a node from 1 item in a tier dominating other items on another tier
 Attribute: crosstext = convenience to get the concatenated text of daughter items on the display tier.
 So "@graphnode{1,5}.crosstext" gets a matching item on tier 1, looks up its daughters on tier 5 and concatenates their text.
@@ -105,7 +115,7 @@ private:
 	void parseWhereStatement(Query *query, QString statement);
 
 	SearchObjectCode parseObjectCode(QString);
-	SearchAttributeCode parseAttributeCode(QString);
+    SearchAttributeCode parseAttributeCode(QString);
 	SearchNode* buildSearchNode(QStringList &tokens);
 
 	QStringList tokenizeString(QString);

@@ -38,17 +38,17 @@ DPoint::DPoint(double time, const QString &text = "")
 }
 
 
-double DPoint::left()
+double DPoint::left() const
 {
     return m_time;
 }
 
-double DPoint::right()
+double DPoint::right() const
 {
     return m_time;
 }
 
-bool DPoint::precedes(Item *item)
+bool DPoint::precedes(Item *item) const
 {
     if (m_time < item->left())
 		return true;
@@ -57,7 +57,7 @@ bool DPoint::precedes(Item *item)
 		return false;
 }
 
-bool DPoint::follows(Item *item)
+bool DPoint::follows(Item *item) const
 {
     if (m_time > item->right())
 		return true;

@@ -130,17 +130,9 @@ using std::make_shared;
 // default property category
 #define DM_DEFAULT_CAT tr("Default")
 
-// mark span/point boundaries in the GUI
-#define TIER_BOUNDARY QString::fromUtf8(" ¤ ")
-#define LINE_BOUNDARY QString::fromUtf8("¤")
-// ¤ •‖
 
 #define MATCH_COTEXT_LENGTH 30
 
-// Encodings
-#define ENCODING_UTF16 "UTF-16"
-#define ENCODING_UTF8 "UTF-8"
-#define ENCODING_ASCII "ASCII"
 
 #define dm_debug(msg) emit error(msg)
 #define inform(msg) emit information(msg)

@@ -31,9 +31,6 @@ SearchWindow::SearchWindow(QueryParser *engine, QWidget *parent, Grammar *gramma
 {
 	this->engine = engine;
     m_grammar = grammar;
-	tier_spinbox_list = QList<QSpinBox*>();
-	search_line_list  = QList<DMLineEdit*>();
-    tier_name_list    = QList<DMLineEdit*>();
 
 	setupUi();
 
@@ -143,6 +140,12 @@ bool SearchWindow::hasGrammar() const
     return m_grammar != nullptr;
 }
 
+QString SearchWindow::getSeparator() const
+{
+    QString sep = separator_line->text();
+    return sep.replace(" ", "%SPACE%");
+}
+
 void SearchWindow::setupFileBox()
 {
 	fileButton_box = new QGroupBox(tr("Files"));
@@ -249,7 +252,14 @@ void SearchWindow::setupSearchBox()
 	displayTier_spinbox = this->initTierSpinBox(1);
 	displayTier_spinbox->hide();
 	displayTier_label->hide();
-	display_layout->addWidget(displayTier_spinbox);
+
+    QHBoxLayout *sep_layout = new QHBoxLayout;
+    separator_line = new QLineEdit(" ");
+    sep_layout->addWidget(new QLabel(tr("Separator (space by default):")));
+    sep_layout->addWidget(separator_line);
+    sep_layout->addStretch();
+    display_layout->addWidget(displayTier_spinbox);
+
 	display_layout->addStretch();
 
 	QHBoxLayout *btn_layout = new QHBoxLayout;
@@ -257,10 +267,13 @@ void SearchWindow::setupSearchBox()
 	btn_layout->addWidget(addLine_btn);
 	btn_layout->addWidget(rmLine_btn);
 	btn_layout->addStretch();
+
+    QHBoxLayout *regex_layout = new QHBoxLayout;
 	searchStyle_box = this->initSearchStyleBox();
 	case_checkBox = new QCheckBox(tr("case sensitive"));
-	btn_layout->addWidget(searchStyle_box);
-	btn_layout->addWidget(case_checkBox);
+    regex_layout->addWidget(searchStyle_box);
+    regex_layout->addWidget(case_checkBox);
+    regex_layout->addStretch();
 
 	//QHBoxLayout *option_layout = new QHBoxLayout;
 
@@ -269,9 +282,11 @@ void SearchWindow::setupSearchBox()
 
 	searchBox_layout->addLayout(display_layout);
 	searchBox_layout->addLayout(sl_layout);
-	searchBox_layout->addLayout(btn_layout);
+    searchBox_layout->addLayout(btn_layout);
+    searchBox_layout->addLayout(regex_layout);
 	//searchBox_layout->addWidget(new QLabel(tr("Search options:")));
 	//searchBox_layout->addLayout(option_layout);
+    searchBox_layout->addLayout(sep_layout);
 	searchBox_layout->addStretch();
 
 	search_box->setLayout(searchBox_layout);
@@ -391,7 +406,7 @@ QString SearchWindow::buildQuery()
 QString SearchWindow::buildSearchGrammarQuery(SearchGrammarTab *tab)
 {
     QString tierName = "";
-    QString searchStm = QString(), data = QString();
+    QString searchStm, data;
     bool compare = tab->compareAnnotators();
 
     // SEARCH statement
@@ -460,7 +475,7 @@ QString SearchWindow::buildAnnotatorFlag(QString ref_annotator) const
 QString SearchWindow::buildDocumentQuery()
 {
 //SEARCH @file[0]  -perl FROM %document WHERE (@document.text ~ &quot;plus&quot;) &amp;&amp; () RETURN @document.match;
-    QString searchStm = QString(), text = QString(), data = QString();
+    QString searchStm, text, data;
 
 
     // SEARCH statement
@@ -499,7 +514,7 @@ QString SearchWindow::buildDocumentQuery()
 
 QString SearchWindow::buildSingleTierQuery()
 {
-	QString searchStm = QString(), text = QString(), data = QString();
+    QString searchStm, text, data;
     QString tierName;
 	int firstTier = -1;
 
@@ -541,7 +556,7 @@ QString SearchWindow::buildSingleTierQuery()
 	QString whereStm = QString("WHERE %1 && %2 ").arg(data, buildmetaStm());
 
 	// RETURN statement
-	QString returnStm = QString("RETURN @item.match;");
+    QString returnStm = QString("RETURN <%1> @item.match;").arg(getSeparator());
 
 	qDebug() << searchStm + fromStm + whereStm + returnStm;
 	return searchStm + fromStm + whereStm + returnStm;
@@ -550,16 +565,16 @@ QString SearchWindow::buildSingleTierQuery()
 
 QString SearchWindow::buildCrossTierQuery()
 {
-	QString searchStm = QString(), text = QString(), data = QString();
-	QStringList texts = QStringList();
+    QString searchStm, text, data;
+    QStringList texts;
 
 	// SEARCH statement
-	searchStm = QString("SEARCH @tier[x]%2").arg(this->getSearchFlags());
+    searchStm = QString("SEARCH @tier[x]%1").arg(this->getSearchFlags());
 
 	// FROM statement
 	QString fromStm = "FROM ";
 	QStringList files;
-	foreach (QCheckBox *item, selectedFiles_box->checkedItems())
+    for(QCheckBox *item : selectedFiles_box->checkedItems())
 		files << item->toolTip();
 
 	if (files.size() == 0)
@@ -575,7 +590,7 @@ QString SearchWindow::buildCrossTierQuery()
 		texts << text;
 	}
 
-	QStringList stms = QStringList();
+    QStringList stms;
 
 	for (int i = 0; i < search_line_list.count(); ++i)
 	{
@@ -587,9 +602,27 @@ QString SearchWindow::buildCrossTierQuery()
             option = QString("$") + tierName;
 
         stms << QString("(@item{%1}.text ~ \"%2\")").arg(option).arg(texts.at(i));
+
+        QString relation;
+        if (tier_relation_list.at(i)->isEnabled())
+        {
+            auto value = tier_relation_list.at(i)->currentText();
+
+            if (value == "is aligned with") {
+                relation = "AND:align";
+            }
+            else if (value == "precedes") {
+                relation = "AND:prec";
+            }
+            else if (value == "dominates") {
+                relation = "AND:dom";
+            }
+
+            stms << relation;
+        }
 	}
 
-	data = QString("(%1)").arg(stms.join(" AND "));
+    data = QString("(%1)").arg(stms.join(" "));
 	QString whereStm = QString("WHERE %1 && %2 ").arg(data, buildmetaStm());
 
 	// RETURN statement
@@ -599,9 +632,10 @@ QString SearchWindow::buildCrossTierQuery()
 	if (dispTier == firstTier)
 		returnStm = QString("RETURN @item.match;");
 	else
-		returnStm = QString("RETURN @graphnode{%1,%2}.crosstext;")
-					.arg(firstTier) // root node tier
-					.arg(dispTier);    // display tier
+        returnStm = QString("RETURN <%1> @graphnode{%2,%3}.crosstext;")
+                    .arg(getSeparator())
+                    .arg(firstTier) // root node tier
+                    .arg(dispTier); // display tier
 
 	qDebug() << searchStm + fromStm + whereStm + returnStm;
 	return searchStm + fromStm + whereStm + returnStm;
@@ -811,14 +845,27 @@ QHBoxLayout * SearchWindow::addSearchLineLayout(int start)
 	DMLineEdit *search_line = new DMLineEdit(tr("Search..."));
 	QSpinBox *tier_spinbox  = this->initTierSpinBox(start);
     DMLineEdit *tier_name   = new DMLineEdit(tr("tier name pattern..."));
+    QComboBox *relation     = new QComboBox;
+
+    relation->addItem(tr("is aligned with"));
+    relation->addItem(tr("precedes"));
+    relation->addItem(tr("dominates"));
 
 	search_line_list << search_line;
 	tier_spinbox_list << tier_spinbox;
     tier_name_list << tier_name;
+    tier_relation_list << relation;
 
 	layout->addWidget(search_line);
 	layout->addWidget(tier_spinbox);
     layout->addWidget(tier_name);
+    layout->addWidget(relation);
+
+    for (int i = 1; i <= tier_relation_list.size(); i++)
+    {
+        bool value = (i != tier_relation_list.size());
+        tier_relation_list.at(i-1)->setEnabled(value);
+    }
 
 	search_line_list.at(search_line_list.count()-1)->setFocus(Qt::OtherFocusReason);
 
@@ -839,10 +886,13 @@ void SearchWindow::addSearchLine()
 	if (tier_spinbox_list.at(0)->value() == 0)
 	{
 		tier_spinbox_list.at(0)->setValue(1);
-		// adjust we're adding the first line
+        // adjust since we're adding the first line
 		if (tier_spinbox_list.count() >= 2 && tier_spinbox_list.at(1)->value() == 1)
 			tier_spinbox_list.at(1)->setValue(2);
 	}
+
+    bool enabled = tier_relation_list.size() > 1;
+    tier_relation_list.first()->setEnabled(enabled);
 
     search_line_list.at(search_line_list.count()-1)->setFocus(Qt::OtherFocusReason);
 }
@@ -868,6 +918,7 @@ void SearchWindow::removeSearchLine()
 		search_line_list.removeLast();
 		tier_spinbox_list.removeLast();
         tier_name_list.removeLast();
+        tier_relation_list.removeLast();
 	}
 
 	if (search_line_list.size() == 1)
@@ -876,6 +927,12 @@ void SearchWindow::removeSearchLine()
 		displayTier_spinbox->hide();
 		displayTier_label->hide();
 	}
+
+    for (int i = 1; i <= tier_relation_list.size(); i++)
+    {
+        bool value = (i != tier_relation_list.size());
+        tier_relation_list.at(i-1)->setEnabled(value);
+    }
 
 	search_line_list.at(search_line_list.count()-1)->setFocus(Qt::OtherFocusReason);
 }

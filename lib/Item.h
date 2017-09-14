@@ -55,11 +55,11 @@ public:
 
     virtual ~Item() = default;
 
-	virtual double left() = 0;
-	virtual double right() = 0;
+    virtual double left() const = 0;
+    virtual double right() const = 0;
 
-	virtual bool precedes(Item *item) = 0;
-	virtual bool follows(Item *item) = 0;
+    virtual bool precedes(Item *item) const = 0;
+    virtual bool follows(Item *item) const = 0;
 
 	QString text() const { return m_text; }
 	void setText(const QString &);
