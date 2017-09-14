@@ -1218,7 +1218,7 @@ void DolmenApp::displaySupportedAudioFormats()
 		formats << formatInfo.name;
 	}
 
-    text = "Support sound formats on this platform: \n\n" + formats.join(", ");
+    text = "Supported sound formats on this platform: \n\n" + formats.join(", ");
     text += "\n\nlibsndfile version: " + sf_version;
     text += "\nRtAudio version: " + QString(RtAudio::getVersion().c_str());
 
