@@ -299,7 +299,10 @@ SOURCES += main.cpp\
     gui/ElementBrowser.cpp \
     lib/BrowserElement.cpp \
 	extra/utf8proc/utf8proc_data.c \
-	runtime/PluginHandler.cpp
+	runtime/PluginHandler.cpp \
+    lib/Script.cpp \
+    gui/ScriptBrowser.cpp \
+    gui/ScriptView.cpp
 
 
 HEADERS  += \
@@ -473,7 +476,10 @@ HEADERS  += \
     extra/quazip/zlib.h \
 	runtime/PluginHandler.h \
 	include/load_plugins_lua.hpp \
-	include/signal_lua.hpp
+	include/signal_lua.hpp \
+    lib/Script.h \
+    gui/ScriptBrowser.h \
+    gui/ScriptView.h
 
 RESOURCES += \
     icons.qrc

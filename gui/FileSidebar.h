@@ -1,7 +1,7 @@
 /*
  * SideBar.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -40,6 +40,7 @@ class QButtonGroup;
 
 #include "gui/CorpusBrowser.h"
 #include "gui/BookmarkBrowser.h"
+#include "gui/ScriptBrowser.h"
 #include "lib/DFile.h"
 
 // Left-side bar for file browsing
@@ -53,6 +54,7 @@ public:
     QLabel *label() const;
     void setCorpus(CorpusBrowser *value);
     void setBookmarks(BookmarkBrowser *value);
+    void setScripts(ScriptBrowser *value);
 
 public slots:
     void showCorpus();
@@ -64,12 +66,15 @@ private slots:
 	void updateTitle(int);
     void toggleCorpus(bool);
     void toggleBookmarks(bool);
+    void toggleScripts(bool);
 
 private:
     QLabel *label_project;
     QStackedWidget *stack;
     CorpusBrowser *corpus;
     BookmarkBrowser *bookmarks;
+    ScriptBrowser *scripts;
+
     QToolButton *btn_corpus, *btn_bookmarks, *btn_scripts;
 
     void addItem(QWidget *w);

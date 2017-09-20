@@ -1,7 +1,7 @@
 /*
  * dolmen.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne 
+ * Copyright (C) 2010-2017 Julien Eychenne 
  *
  * This file is part of Dolmen.
  *
@@ -24,6 +24,7 @@
  */
 
 #include "Query.h"
+#include <algorithm>
 #include <QRegularExpression>
 #include <QProgressDialog>
 
@@ -48,7 +49,6 @@ Query::Query(QString searchString, Grammar *gr) :
     m_grammar = gr;
     m_annotators = QStringList();
     m_ref_annotator = "";
-    m_results_annotators = QHash<QString, QList<SearchMatchPtr> >();
 }
 
 QString Query::toString() const
@@ -136,7 +136,10 @@ void Query::run()
         progress.setValue(size);
 
         // set results
-        m_results = QList<SearchMatchPtr>::fromSet(searchDataTree(data_node));
+        auto tmp = searchDataTree(data_node);
+        m_results.clear();
+        m_results.reserve(tmp.size());
+        std::for_each(tmp.begin(), tmp.end(), [&](SearchMatchPtr ptr) { m_results.append(std::move(ptr));});
 
         this->applyCrossTextDisplay();
 
@@ -167,8 +170,12 @@ void Query::runComparison()
 
         // set m_files for searchDataTree()
         m_files = files;
-        QList<SearchMatchPtr> results = QList<SearchMatchPtr>::fromSet(searchDataTree(data_node));
-        m_results_annotators[annotator] = results;
+
+        QVector<SearchMatchPtr> results;
+        auto tmp = searchDataTree(data_node);
+        results.reserve(tmp.size());
+        std::for_each(tmp.begin(), tmp.end(), [&](SearchMatchPtr ptr) { results.append(std::move(ptr));});
+        m_results_annotators[annotator] = std::move(results);
     }
 
     groupSearchMatches();
@@ -178,8 +185,8 @@ void Query::runComparison()
 
 void Query::groupSearchMatches()
 {
-    m_results = QList<SearchMatchPtr>();
-    QList<SearchMatchPtr> ref_matches = m_results_annotators[m_ref_annotator];
+    m_results.clear();
+    QVector<SearchMatchPtr> ref_matches = m_results_annotators[m_ref_annotator];
     int countGroupings = 0;
 
     // compare all possible matches
@@ -190,7 +197,7 @@ void Query::groupSearchMatches()
             if (annotator == m_ref_annotator)
                 continue;
 
-            QList<SearchMatchPtr> candidate_matches = m_results_annotators[annotator];
+            QVector<SearchMatchPtr> candidate_matches = m_results_annotators[annotator];
 
             foreach (auto &candidate_match, candidate_matches)
             {
@@ -221,9 +228,14 @@ Grammar * Query::grammar() const
     return m_grammar;
 }
 
-QList<SearchMatchPtr>& Query::results()
+QVector<SearchMatchPtr> &Query::results()
 {
-	return m_results;
+    return m_results;
+}
+
+int Query::resultCount() const
+{
+    return m_results.size();
 }
 
 QString Query::separator() const
@@ -372,7 +384,7 @@ void Query::applyCrossTextDisplay()
 		|| m_results.size() == 0)
 		return;
 
-    QList<SearchMatchPtr> newResults;
+    QVector<SearchMatchPtr> newResults;
 
     for (auto &match : m_results)
 	{

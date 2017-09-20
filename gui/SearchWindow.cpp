@@ -1,7 +1,7 @@
 /*
  * SearchWindow.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -379,7 +379,8 @@ void SearchWindow::accept()
     Query *query = engine->parse(this->buildQuery(), m_grammar);
     if (query) emit sendQuery(query);
 
-    QDialog::accept();
+    this->hide();
+    //QDialog::accept();
 }
 
 QString SearchWindow::buildQuery()
@@ -440,7 +441,7 @@ QString SearchWindow::buildSearchGrammarQuery(SearchGrammarTab *tab)
     QString whereStm = QString("WHERE %1 && %2 ").arg(data, buildmetaStm(compare));
 
     // RETURN statement
-    QString returnStm = QString("RETURN @item.match;");
+    QString returnStm = QString("RETURN <> @item.match;");
 
 
     qDebug() << searchStm + fromStm + whereStm + returnStm;

@@ -1,7 +1,7 @@
 /*
  * Project.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne 
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -42,6 +42,7 @@
 #include "lib/Sound.h"
 #include "lib/metadata.h"
 #include "lib/Bookmark.h"
+#include "lib/Script.h"
 #include "runtime/scripting.h"
 #include "utils/routines.h"
 
@@ -82,19 +83,22 @@ public:
 
 	Changelog * changelog();
 
+    QList<Script*> scripts() const;
+
 signals:
-	void error(QString); // non-critical errors (e.g. file not recognized)
+    void error(QString); // non-critical errors (e.g. file not recognized)
 	void information(QString);
 	void project_modified(VFolder *vf);
     void project_cleared();
 	void project_filesModified(); // files in the project were modified but the file system remains unchanged
 	void project_saved();
-	void file_error(QString &msg); // critical errors (e.g. badly formatted annotation)
+    void file_error(QString msg); // critical errors (e.g. badly formatted annotation)
 	void project_startImportingFolder(int);
 	void project_fileImported(int);
     void project_newFileAdded(DFile *f);
 	void project_pathSet(QString);
-	void project_bookmarksModified(QList<Bookmark*>);
+    void project_bookmarksModified(QList<IBrowserElement*>);
+    void project_scriptsModified(QList<IBrowserElement*>);
     void saveFileMetadata(DFile *f);
     void setFileMetadata(DFile *f);
 
@@ -134,6 +138,7 @@ private:
     QHash<QString, int>  file_ref_count;
     VFolder             *file_system; // virtual file system displayed in the file browser
     QList<Bookmark*>     m_bookmarks;
+    QList<Script*>       m_scripts;
     Changelog           *m_changelog;
     sol::state_view      m_lua;
 
@@ -156,6 +161,7 @@ private:
 	void readXmlVNode(QXmlStreamReader *reader, VFolder *folder);
 	void readXmlMetadata(QXmlStreamReader *reader);
 	void readXmlBookmarks(QXmlStreamReader *reader);
+    void readXmlScripts(QXmlStreamReader *reader);
 
 	void saveFiles(); // save all unsaved changes in the project
 	void saveFile(DFile *);
@@ -163,6 +169,8 @@ private:
 
 	void bindAllAnnotations();
 
+    void emitBookmarksModified();
+    void emitScriptsModified();
 
 };
 

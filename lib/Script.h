@@ -1,5 +1,5 @@
 /*
- * AnnotationView.h
+ * Script.h
  *
  * Copyright (C) 2010-2017 Julien Eychenne
  *
@@ -19,42 +19,37 @@
  * along with Dolmen. If not, see <http://www.gnu.org/licenses/>.
  *
  * Author:  Julien Eychenne
- * Purpose: GUI view for an annotation
- * Created: 01/03/2011
+ * Purpose: a Lua script
+ * Created: 15/09/2017
  */
 
-#ifndef ANNOTATIONVIEW_H
-#define ANNOTATIONVIEW_H
+#ifndef SCRIPT_H
+#define SCRIPT_H
 
-#include <QGroupBox>
-#include <QTextEdit>
-#include <QLabel>
+#include <qxmlstream.h>
+#include "lib/BrowserElement.h"
 
-#include "blocks/SignalBlock.h"
-#include "blocks/TierBlock.h"
-#include "View.h"
-#include "lib/Annotation.h"
-
-class AnnotationView: public View
+class Script : public IBrowserElement
 {
-	Q_OBJECT
-
 public:
-	AnnotationView(QTabWidget *parent, Annotation *annot, double start = 0., double end = 0);
-	~AnnotationView();
-	void leave();
-	QString id() const;
+    Script();
 
-private slots:
+    bool readFromXml(QXmlStreamReader *reader);
+    void writeToXml(QXmlStreamWriter *writer);
+
+    QString path() const;
+    void setPath(const QString &path);
+
+
+    QString label() const;
+    void setLabel(const QString &label);
+
+    void open() override;
+
 
 private:
-	SignalBlock		*wave_block;
-	TierBlock		*tier_block;
-	Annotation		*m_annot;
-
-	void setSignalAndTiers(double start, double end);
-	void setTiersOnly(double start, double end);
-
+    QString m_path;
+    QString m_label;
 };
 
-#endif // ANNOTATIONVIEW_H
+#endif // SCRIPT_H

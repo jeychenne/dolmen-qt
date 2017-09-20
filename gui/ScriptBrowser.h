@@ -1,5 +1,5 @@
 /*
- * AnnotationView.h
+ * ScriptBrowser.h
  *
  * Copyright (C) 2010-2017 Julien Eychenne
  *
@@ -19,42 +19,28 @@
  * along with Dolmen. If not, see <http://www.gnu.org/licenses/>.
  *
  * Author:  Julien Eychenne
- * Purpose: GUI view for an annotation
- * Created: 01/03/2011
+ * Purpose: display scripts in the leftmost panel.
+ * Created: 15/09/2017
  */
 
-#ifndef ANNOTATIONVIEW_H
-#define ANNOTATIONVIEW_H
+#ifndef SCRIPTBROWSER_H
+#define SCRIPTBROWSER_H
 
-#include <QGroupBox>
-#include <QTextEdit>
-#include <QLabel>
+#include "ElementBrowser.h"
+#include "lib/Script.h"
 
-#include "blocks/SignalBlock.h"
-#include "blocks/TierBlock.h"
-#include "View.h"
-#include "lib/Annotation.h"
-
-class AnnotationView: public View
+class ScriptBrowser : public ElementBrowser
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	AnnotationView(QTabWidget *parent, Annotation *annot, double start = 0., double end = 0);
-	~AnnotationView();
-	void leave();
-	QString id() const;
+    ScriptBrowser(QWidget *parent = NULL);
 
-private slots:
+protected:
+    void displayElements() override;
+    void finalizeElements() override;
 
-private:
-	SignalBlock		*wave_block;
-	TierBlock		*tier_block;
-	Annotation		*m_annot;
-
-	void setSignalAndTiers(double start, double end);
-	void setTiersOnly(double start, double end);
 
 };
 
-#endif // ANNOTATIONVIEW_H
+#endif // SCRIPTBROWSER_H

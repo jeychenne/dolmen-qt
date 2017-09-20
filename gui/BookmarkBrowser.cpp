@@ -1,7 +1,7 @@
 /*
  * BookmarkBrowser.cpp
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -38,43 +38,42 @@ BookmarkBrowser::BookmarkBrowser(QWidget *parent) :
 #ifdef Q_OS_MAC
 	headerItem()->setHidden(true);
 #else
-	headerItem()->setText(0, "");
+    headerItem()->setText(0, "Bookmarks");
 #endif
 }
 
-void BookmarkBrowser::redraw(QList<Bookmark *> bookmarks)
-{	
-	this->clear();
+void BookmarkBrowser::displayElements()
+{
+    QIcon icon(":/icons/32x32/bookmark.png");
+    for (auto *elem : m_content)
+    {
+        Bookmark *bm = dynamic_cast<Bookmark*>(elem);
+        QTreeWidgetItem *item = new QTreeWidgetItem(this);
+        item->setText(0, bm->title());
+        item->setToolTip(0, bm->tooltip());
+        item->setIcon(0, icon);
+        item->setData(0, Qt::UserRole, bm->id());
 
+        if (bm->type() == "SearchMatch")
+        {
+            SearchMatch *qm = static_cast<SearchMatch*>(bm);
+            connect(qm, SIGNAL(openDFile(DFile*,double,double)), this, SIGNAL(openDFile(DFile*,double,double)));
+        }
+    }
+}
+
+void BookmarkBrowser::finalizeElements()
+{
     for (auto elem: m_content)
-	{
+    {
         auto bm = dynamic_cast<Bookmark*>(elem);
 
-		if (bm->type() == "SearchMatch")
-		{
-			SearchMatch *qm = static_cast<SearchMatch*>(bm);
-			disconnect(qm, SIGNAL(openDFile(DFile*,double,double)), this, SIGNAL(openDFile(DFile*,double,double)));
-		}
-	}
-
-    m_content.clear();
-    std::copy(bookmarks.begin(), bookmarks.end(), std::back_inserter(m_content));
-
-    QIcon icon(":/icons/32x32/bookmark.png");
-	foreach (Bookmark *bm, bookmarks)
-	{
-		QTreeWidgetItem *item = new QTreeWidgetItem(this);
-		item->setText(0, bm->title());
-		item->setToolTip(0, bm->tooltip());
-		item->setIcon(0, icon);
-		item->setData(0, Qt::UserRole, bm->id());
-
-		if (bm->type() == "SearchMatch")
-		{
-			SearchMatch *qm = static_cast<SearchMatch*>(bm);
-			connect(qm, SIGNAL(openDFile(DFile*,double,double)), this, SIGNAL(openDFile(DFile*,double,double)));
-		}
-	}
+        if (bm->type() == "SearchMatch")
+        {
+            SearchMatch *qm = static_cast<SearchMatch*>(bm);
+            disconnect(qm, SIGNAL(openDFile(DFile*,double,double)), this, SIGNAL(openDFile(DFile*,double,double)));
+        }
+    }
 }
 
 void BookmarkBrowser::onItemDoubleClicked(QTreeWidgetItem *item)
@@ -136,24 +135,6 @@ void BookmarkBrowser::onRemoveBookmarks()
     emit removeElements(lst);
 }
 
-IBrowserElement *BookmarkBrowser::elementFromId(int id) const
-{
-    for (auto elem: m_content)
-	{
-        if (elem->id() == id)
-            return elem;
-	}
-
-    return NULL;
-}
-
-IBrowserElement *BookmarkBrowser::elementFromTreeItem(QTreeWidgetItem *item)
-{
-    bool ok;
-    int id = item->data(0, Qt::UserRole).toInt(&ok);
-
-    return ok ? elementFromId(id) : nullptr;
-}
 
 
 

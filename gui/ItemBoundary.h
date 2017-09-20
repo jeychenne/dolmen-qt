@@ -1,7 +1,7 @@
 /*
  * ItemBoundary.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *

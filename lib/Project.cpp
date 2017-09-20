@@ -1,7 +1,7 @@
 /*
  * dolmen.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne 
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -144,6 +144,10 @@ void Project::open(const QString &path)
 				emit project_startImportingFolder(size);
                 readXmlVNode(&reader, file_system);
 			}
+            else if (reader.name() == "Scripts")
+            {
+                readXmlScripts(&reader);
+            }
 			else
 				reader.readNext();
 		}
@@ -184,7 +188,21 @@ void Project::bindAllAnnotations()
 			Annotation *annot = qobject_cast<Annotation*>(f);
 			annot->setSoundFile();
 		}
-	}
+    }
+}
+
+void Project::emitBookmarksModified()
+{
+    QList<IBrowserElement*> bookmarks;
+    std::copy(m_bookmarks.begin(), m_bookmarks.end(), std::back_inserter(bookmarks));
+    emit project_bookmarksModified(std::move(bookmarks));
+}
+
+void Project::emitScriptsModified()
+{
+    QList<IBrowserElement*> scripts;
+    std::copy(m_scripts.begin(), m_scripts.end(), std::back_inserter(scripts));
+    emit project_scriptsModified(std::move(scripts));
 }
 
 void Project::registerProject(const QString &path)
@@ -228,14 +246,41 @@ void Project::readXmlBookmarks(QXmlStreamReader *reader)
 		if (reader->isStartElement() && reader->name() == "Bookmark")
 		{
 			SearchMatch *match = new SearchMatch(NULL, NULL, -1, 0.); // invalid match
-			if (match->readFromXml(reader))
+
+            if (match->readFromXml(reader)) {
 				m_bookmarks << match;
+            }
+            else {
+                emit file_error("Invalid bookmark in project");
+            }
 		}
 
 		reader->readNext();
 	}
 
-	emit project_bookmarksModified(m_bookmarks);
+    emitBookmarksModified();
+}
+
+void Project::readXmlScripts(QXmlStreamReader *reader)
+{
+    while (! (reader->isEndElement() && reader->name() == "Scripts"))
+    {
+        if (reader->isStartElement() && reader->name() == "Script")
+        {
+            auto script = new Script;
+
+            if (script->readFromXml(reader)) {
+                m_scripts.append(std::move(script));
+            }
+            else {
+                emit file_error("Invalid script element in project");
+            }
+        }
+
+        reader->readNext();
+    }
+
+    emitScriptsModified();
 }
 
 void Project::readXmlVNode(QXmlStreamReader *reader, VFolder *folder)
@@ -300,6 +345,11 @@ void Project::setChanged()
 {
     unsaved_changes = true;
     emit project_modified(file_system);
+}
+
+QList<Script *> Project::scripts() const
+{
+    return m_scripts;
 }
 
 bool Project::hasUnsavedChanges() const
@@ -478,7 +528,7 @@ void Project::removeFolder(VFolder *folder)
 void Project::addBookmark(Bookmark *bm)
 {
 	m_bookmarks << bm;
-	emit project_bookmarksModified(m_bookmarks);
+    emitBookmarksModified();
 	this->setChanged();
 }
 
@@ -514,7 +564,7 @@ void Project::removeBookmark(Bookmark *bm)
 {
 	if (m_bookmarks.removeOne(bm))
 	{
-		emit project_bookmarksModified(m_bookmarks);
+        emitBookmarksModified();
         this->setChanged();
 	}
 }
@@ -662,10 +712,18 @@ void Project::writeToDisk(QString &path) /* [slot] */
 	// write metadata after the file system so that paths in bookmarks can be set
 	writer.writeStartElement("Metadata");
 	this->writeXmlChangelog(&writer);
+
 	writer.writeStartElement("Bookmarks");
-	foreach (Bookmark *bm, m_bookmarks)
+    for (Bookmark *bm : m_bookmarks)
 		bm->writeToXml(&writer);
 	writer.writeEndElement(); // </Bookmarks>
+
+    writer.writeStartElement("Scripts");
+    for (auto &script : m_scripts) {
+        script->writeToXml(&writer);
+    }
+    writer.writeEndElement(); // </Scripts>
+
 	writer.writeEndElement(); // </Metadata>
 
 	writer.writeEndDocument(); // </DolmenProject>
@@ -741,7 +799,7 @@ void Project::writeXmlChangelog(QXmlStreamWriter *writer)
 		if (! authors.isEmpty())
 		{
 			writer->writeStartElement("Authors");
-			foreach(Author *author, authors)
+            for (Author *author : authors)
 			{
 				writer->writeStartElement("Author");
 
@@ -802,7 +860,7 @@ void Project::nativizeAnnotations(QStringList &paths)
 
 void Project::removeVFiles(QList<VFileNode*> &files) /* [slot] */
 {
-	foreach(VFileNode *vf, files)
+    for (VFileNode *vf : files)
 	{
 		if (isInstance(vf, VFile))
 			removeFile(qobject_cast<VFile*>(vf));
@@ -816,7 +874,7 @@ void Project::removeVFiles(QList<VFileNode*> &files) /* [slot] */
 
 void Project::clear()
 {
-	foreach(DFile *f, Global::FileHash.values())
+    for (DFile *f : Global::FileHash.values())
 		delete f;
 
 	Global::FileHash.clear();
@@ -826,6 +884,11 @@ void Project::clear()
 	m_changelog = NULL;
 	//TODO: cleanly delete bookmarks (multiple inheritance)
 	m_bookmarks.clear();
+
+    for (auto script : m_scripts) {
+        delete script;
+    }
+    m_scripts.clear();
 
     file_system->clear();
     Global::IdMap[file_system->id()] = file_system;

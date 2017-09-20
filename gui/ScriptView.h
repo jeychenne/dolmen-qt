@@ -1,5 +1,5 @@
 /*
- * AnnotationView.h
+ * ScriptView.h
  *
  * Copyright (C) 2010-2017 Julien Eychenne
  *
@@ -19,42 +19,23 @@
  * along with Dolmen. If not, see <http://www.gnu.org/licenses/>.
  *
  * Author:  Julien Eychenne
- * Purpose: GUI view for an annotation
- * Created: 01/03/2011
+ * Purpose: display and edit a script in the viewer.
+ * Created: 16/09/2017
  */
 
-#ifndef ANNOTATIONVIEW_H
-#define ANNOTATIONVIEW_H
+#ifndef SCRIPTVIEW_H
+#define SCRIPTVIEW_H
 
-#include <QGroupBox>
-#include <QTextEdit>
-#include <QLabel>
-
-#include "blocks/SignalBlock.h"
-#include "blocks/TierBlock.h"
 #include "View.h"
-#include "lib/Annotation.h"
+#include "lib/Script.h"
 
-class AnnotationView: public View
+class ScriptView : public View
 {
-	Q_OBJECT
-
 public:
-	AnnotationView(QTabWidget *parent, Annotation *annot, double start = 0., double end = 0);
-	~AnnotationView();
-	void leave();
-	QString id() const;
-
-private slots:
+    ScriptView(QTabWidget *parent, const QString &title = "untitled*");
 
 private:
-	SignalBlock		*wave_block;
-	TierBlock		*tier_block;
-	Annotation		*m_annot;
-
-	void setSignalAndTiers(double start, double end);
-	void setTiersOnly(double start, double end);
-
+    Script *m_script;
 };
 
-#endif // ANNOTATIONVIEW_H
+#endif // SCRIPTVIEW_H

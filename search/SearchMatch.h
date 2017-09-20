@@ -1,7 +1,7 @@
 /*
  * SearchMatch.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -79,7 +79,7 @@ public:
     bool      hasSiblings() const;
     void      addSibling(const SearchMatchPtr &m);
     bool      hasDivergingAnnotations(Grammar *grammar) const;
-    QList<SearchMatchPtr> siblings() const;
+    QVector<SearchMatchPtr> siblings() const;
     DFile*    file() const;
     Item*     firstItem() const;
     Item*     lastItem() const;
@@ -110,7 +110,7 @@ private:
     QList<Item*> m_items; // sequence of matched items
     int        m_tier;
     int        m_nth_match; // nth match in item
-    QList<SearchMatchPtr> m_siblings; // store (near-)identical matches when comparing annotators
+    QVector<SearchMatchPtr> m_siblings; // store (near-)identical matches when comparing annotators
 };
 
 

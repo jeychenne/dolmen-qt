@@ -1,7 +1,7 @@
 /*
  * SearchMatch.cpp
  *
- * Copyright (C) 2010-2013 Julien Eychenne 
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -41,7 +41,6 @@ SearchMatch::SearchMatch(DFile *file, Item *item, int tier, double match) :
     m_left      = m_right = "";
     m_nth_match = 1;
     m_tier      = tier;
-    m_siblings  = QList<SearchMatchPtr>();
 }
 
 SearchMatch::SearchMatch(DFile *file, QList<Item*> items, int tier, QString match)
@@ -72,7 +71,6 @@ SearchMatch::SearchMatch(DFile *file, QString match, QString left, QString right
     m_right     = right;
     m_tier      = -1;
     m_nth_match = 1;
-    m_siblings  = QList<SearchMatchPtr>();
 }
 
 // sort by file, and then by tier, then by time stamp
@@ -171,7 +169,7 @@ bool SearchMatch::hasDivergingAnnotations(Grammar *grammar) const
     if (grammar)
         fields << grammar->matchActiveFields(m_match).join("");
 
-    foreach (auto &sibling, m_siblings)
+    for (auto &sibling : m_siblings)
     {
         if (grammar)
         {
@@ -194,7 +192,7 @@ bool SearchMatch::hasDivergingAnnotations(Grammar *grammar) const
     return false;
 }
 
-QList<SearchMatchPtr> SearchMatch::siblings() const
+QVector<SearchMatchPtr> SearchMatch::siblings() const
 {
     return m_siblings;
 }

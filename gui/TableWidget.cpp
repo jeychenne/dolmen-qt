@@ -1,7 +1,7 @@
 /*
  * TableWidget.cpp
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  * Copyright (C) 2012 Japanese Society for the Promotion of Science (JSPS)
  *
  * This file is part of Dolmen.

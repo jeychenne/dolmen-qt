@@ -1,7 +1,7 @@
 /*
  * SideBar.cpp
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -43,11 +43,11 @@ FileSidebar::FileSidebar(QWidget *parent) :
 
 	btn_corpus = makeButton(group, this, QIcon(":/icons/32x32/corpus.png"), tr("Corpus"));
 	btn_bookmarks = makeButton(group, this, QIcon(":/icons/32x32/bookmark.png"), tr("Bookmarks"));
-    //btn_scripts = makeButton(group, this, QIcon(":/icons/32x32/console.png"), tr("Scripts"));
+//    btn_scripts = makeButton(group, this, QIcon(":/icons/32x32/console.png"), tr("Scripts"));
 
     tool_layout->addWidget(btn_corpus);
     tool_layout->addWidget(btn_bookmarks);
-    //tool_layout->addWidget(btn_scripts);
+//    tool_layout->addWidget(btn_scripts);
     tool_layout->addStretch();
     btn_corpus->toggle();
 
@@ -103,6 +103,13 @@ void FileSidebar::setBookmarks(BookmarkBrowser *value)
     connect(btn_bookmarks, SIGNAL(toggled(bool)), this, SLOT(toggleBookmarks(bool)));
 }
 
+void FileSidebar::setScripts(ScriptBrowser *value)
+{
+    scripts = value;
+    addItem(value);
+    connect(btn_scripts, SIGNAL(toggled(bool)), this, SLOT(toggleScripts(bool)));
+}
+
 void FileSidebar::showCorpus()
 {
     if (!btn_corpus->isChecked()) {
@@ -139,6 +146,13 @@ void FileSidebar::toggleBookmarks(bool checked)
 {
     if (checked) {
         stack->setCurrentWidget(bookmarks);
+    }
+}
+
+void FileSidebar::toggleScripts(bool checked)
+{
+    if (checked) {
+        stack->setCurrentWidget(scripts);
     }
 }
 

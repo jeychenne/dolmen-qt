@@ -1,7 +1,7 @@
 /*
  * dolmen.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne 
+ * Copyright (C) 2010-2017 Julien Eychenne 
  *
  * This file is part of Dolmen.
  *
@@ -63,7 +63,8 @@ public:
 	QStringList filePaths() const;
 	QList<DFile*> files() const;
 	QString toString() const;
-    QList<SearchMatchPtr>& results();
+    QVector<SearchMatchPtr> &results();
+    int resultCount() const;
     QString separator() const;
     void setSeparator(const QString &separator);
 
@@ -75,8 +76,8 @@ private:
     bool                 case_sensitive_search;
     QString              search_style;
     QSet<DFile*>         m_files;
-    QList<SearchMatchPtr>   m_results;
-    QHash<QString, QList<SearchMatchPtr> > m_results_annotators;// used when comparing annotators
+    QVector<SearchMatchPtr> m_results;
+    QHash<QString, QVector<SearchMatchPtr> > m_results_annotators;// used when comparing annotators
     QString              search_string;
     SearchNode           *data_node, *meta_node;
     SearchObjectCode     return_object_code;

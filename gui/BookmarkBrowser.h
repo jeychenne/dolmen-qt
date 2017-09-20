@@ -1,7 +1,7 @@
 /*
  * BookmarkBrowser.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -44,8 +44,9 @@ signals:
     void removeElements(QList<IBrowserElement*>);
     void elementClicked(IBrowserElement *bm);
 
-public slots:
-	void redraw(QList<Bookmark*>);
+protected:
+    void displayElements() override;
+    void finalizeElements() override;
 
 private slots:
 	void onItemDoubleClicked(QTreeWidgetItem *);
@@ -54,13 +55,6 @@ private slots:
     void onOpenInView();
     void onOpenInPraat();
 	void onRemoveBookmarks();
-
-private:
-    QList<IBrowserElement*> m_content;
-
-    IBrowserElement* elementFromId(int id) const;
-    IBrowserElement* elementFromTreeItem(QTreeWidgetItem *item);
-
 
 };
 

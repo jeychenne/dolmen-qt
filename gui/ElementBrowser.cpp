@@ -27,3 +27,30 @@ ElementBrowser::ElementBrowser(QWidget *parent) :
     setSizePolicy(sizePolicy);
     setFrameShadow(QFrame::Plain);
 }
+
+IBrowserElement *ElementBrowser::elementFromId(int id) const
+{
+    for (auto elem: m_content)
+    {
+        if (elem->id() == id)
+            return elem;
+    }
+
+    return NULL;
+}
+
+IBrowserElement *ElementBrowser::elementFromTreeItem(QTreeWidgetItem *item)
+{
+    bool ok;
+    int id = item->data(0, Qt::UserRole).toInt(&ok);
+
+    return ok ? elementFromId(id) : nullptr;
+}
+
+void ElementBrowser::redraw(QList<IBrowserElement*> elements)
+{
+    this->clear();
+    finalizeElements();
+    m_content = std::move(elements);
+    displayElements();
+}

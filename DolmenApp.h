@@ -1,7 +1,7 @@
 /*
  * DolmenApp.h
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -79,7 +79,7 @@ public:
 public slots:
     void onMainSearchClicked();
     void onMainSearchClicked(Grammar *grammar);
-	void warnUser(QString &msg);
+    void warnUser(QString msg);
 	void displayQuery(Query *);
 	void closeEvent(QCloseEvent *);
 	void askPath(DFile *);
@@ -130,6 +130,7 @@ private slots:
     void importMetadata(const QString &path);
     void onExtendConcMenu();
     void onGoToWebsite();
+    void runLastQuery();
 
 private:
     QWidget             *root_widget, *wgt_browser_bar;
@@ -142,12 +143,13 @@ private:
     FileSidebar         *m_sidebar;
     CorpusBrowser       *corpus_browser;
     BookmarkBrowser     *bookmark_browser;
+    ScriptBrowser       *script_browser;
     Viewer              *viewer;
     BottomPane          *m_tabs_bottom;
     PreferenceEditor    *prefs_editor;
     MetadataSideBar     *metadata_widget;
     MainMenu            *menu;
-    QMenu               *file_menu, *conc_menu, *edit_menu, *window_menu, *tools_menu, *help_menu;
+    QMenu               *file_menu, *search_menu, *edit_menu, *window_menu, *tools_menu, *help_menu;
     Project             *current_project;
     QueryParser         *m_query_parser;
 
@@ -159,7 +161,7 @@ private:
     ActionSaveProjectAs *action_save_project_as;
     ActionImportMetaCsv *action_import_meta;
     QAction             *action_close_view, *action_show_browser, *action_show_bottom_tabs, *action_show_status,
-                        *action_show_metadata, *action_compare_speakers, *action_compare_annotators;
+                        *action_show_metadata, *action_compare_speakers, *action_compare_annotators, *run_last_query;
 
 
     QProcess            *process; // process to display doc
@@ -167,13 +169,14 @@ private:
     MainDatabase        *m_db;
     PluginHandler       *m_plugin_handler;
     sol::state_view      m_lua;
+    SearchWindow        *m_search_window; // Last search window
 
 	// initialize GUI
 	void setProject();
 	void setupUi();
 	void setMainMenu();
 	void setFileMenu();
-    void setConcMenu();
+    void setSearchMenu();
 	void setEditMenu();
 	void setWindowMenu();
 	void setToolsMenu();
@@ -197,6 +200,8 @@ private:
     void setMainPlugin(Plugin *plugin);
 	void closeApplication();
     void setMainDatabase();
+    void cacheSearchWindow(SearchWindow *window);
+
 };
 
 #endif // DOLMENAPP_H

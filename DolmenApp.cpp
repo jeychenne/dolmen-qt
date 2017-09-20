@@ -1,7 +1,7 @@
 /*
  * DolmenApp.cpp
  *
- * Copyright (C) 2010-2013 Julien Eychenne
+ * Copyright (C) 2010-2017 Julien Eychenne
  *
  * This file is part of Dolmen.
  *
@@ -95,6 +95,7 @@ DolmenApp::DolmenApp(sol::state_view lua, QString version, QWidget *parent, cons
     m_toolbar = NULL;
     m_query_parser = NULL;
     m_db = NULL;
+    m_search_window = NULL;
 	readSettings();
 	setProject();
     setMainDatabase();
@@ -266,6 +267,16 @@ void DolmenApp::setMainDatabase()
     }
 }
 
+void DolmenApp::cacheSearchWindow(SearchWindow *window)
+{
+    if (m_search_window && m_search_window != window) {
+        delete m_search_window;
+    }
+
+    m_search_window = window;
+    run_last_query->setEnabled(true);
+}
+
 
 void DolmenApp::installUserPlugin()
 {
@@ -321,6 +332,15 @@ void DolmenApp::onExtendConcMenu()
 void DolmenApp::onGoToWebsite()
 {
     QDesktopServices::openUrl(QUrl("http://dolmen.rtfd.io"));
+}
+
+void DolmenApp::runLastQuery()
+{
+    if (m_search_window)
+    {
+        m_search_window->show();
+        cacheSearchWindow(m_search_window);
+    }
 }
 
 void DolmenApp::openRecentProject() // [SLOT]
@@ -406,12 +426,12 @@ void DolmenApp::initializePlugins()
 void DolmenApp::initializeGrammars()
 {
     if (!m_plugin_handler->plugins().isEmpty()) {
-        conc_menu->addSeparator();
+        search_menu->addSeparator();
     }
 
     foreach (Plugin *p, m_plugin_handler->plugins())
     {
-        auto menu = conc_menu->addMenu(p->name());
+        auto menu = search_menu->addMenu(p->name());
 
         foreach (auto g, p->getGrammars())
         {
@@ -426,9 +446,9 @@ void DolmenApp::initializeGrammars()
 
 void DolmenApp::postInitialize()
 {
-    conc_menu->addSeparator();
+    search_menu->addSeparator();
     auto extend_conc = new QAction(tr("How to extend this menu"));
-    conc_menu->addAction(extend_conc);
+    search_menu->addAction(extend_conc);
     connect(extend_conc, SIGNAL(triggered()), this, SLOT(onExtendConcMenu()));
 }
 
@@ -570,7 +590,7 @@ void DolmenApp::setMainMenu()
 
 	setFileMenu();
 	setEditMenu();
-    setConcMenu();
+    setSearchMenu();
     setToolsMenu();
 	setWindowMenu();
 	setHelpMenu();
@@ -658,16 +678,22 @@ void DolmenApp::setFileMenu()
     file_menu->addAction(quitDolmen);
 }
 
-void DolmenApp::setConcMenu()
+void DolmenApp::setSearchMenu()
 {
-    conc_menu = menu->addMenu(tr("Conc"));
+    search_menu = menu->addMenu(tr("Search"));
     auto generic_find = new QAction(tr("Find concordances..."));
     generic_find->setShortcut(QKeySequence("Ctrl+f"));
     //generic_find->setToolTip(tr("Find some text in the current project"));
-    conc_menu->addAction(generic_find);
-    connect(generic_find, SIGNAL(triggered()), this, SLOT(onMainSearchClicked()));
 
-    // The menu will be finalized once plugins have been loaded...
+    run_last_query = new QAction(tr("Run last query..."));
+    run_last_query->setEnabled(false);
+
+    search_menu->addAction(generic_find);
+    search_menu->addAction(run_last_query);
+    connect(generic_find, SIGNAL(triggered()), this, SLOT(onMainSearchClicked()));
+    connect(run_last_query, SIGNAL(triggered()), this, SLOT(runLastQuery()));
+
+    // The menu will be fully populated once plugins have been loaded...
 }
 
 void DolmenApp::setEditMenu()
@@ -783,9 +809,11 @@ void DolmenApp::setBrowserBar()
 
     corpus_browser = new CorpusBrowser(current_project, Global::Praat, m_sidebar->label());
     bookmark_browser = new BookmarkBrowser;
+//    script_browser = new ScriptBrowser; (uncomment connection with redraw)
 
     m_sidebar->setCorpus(corpus_browser);
     m_sidebar->setBookmarks(bookmark_browser);
+//    m_sidebar->setScripts(script_browser);
     //TODO: add scripts
     m_sidebar->showCorpus();
     vlayout_browser_bar->addWidget(m_sidebar);
@@ -836,6 +864,7 @@ void DolmenApp::onMainSearchClicked(Grammar *grammar)
     SearchWindow *window = new SearchWindow(m_query_parser, this, grammar);
     connect(window, SIGNAL(sendQuery(Query*)), this, SLOT(displayQuery(Query*)));
 	window->show();
+    cacheSearchWindow(window);
 }
 
 void DolmenApp::resetQueryParser()
@@ -843,12 +872,12 @@ void DolmenApp::resetQueryParser()
 	// first regenerate search engine to make sure it uses the current project
     if (m_query_parser)
 	{
-        disconnect(m_query_parser, SIGNAL(error_search(QString&)), this, SLOT(warnUser(QString&)));
+        disconnect(m_query_parser, SIGNAL(error_search(QString)), this, SLOT(warnUser(QString)));
         delete m_query_parser;
 	}
 
     m_query_parser = new QueryParser(current_project);
-    connect(m_query_parser, SIGNAL(error_search(QString&)), this, SLOT(warnUser(QString&)));
+    connect(m_query_parser, SIGNAL(error_search(QString)), this, SLOT(warnUser(QString)));
 }
 
 void DolmenApp::onFileBrowserDoubleClicked()
@@ -903,7 +932,7 @@ void DolmenApp::displayQuery(Query *query)
 	foreach (QString warning, query->warnings())
 		this->error(warning);
 
-	if (query->results().size() == 0)
+    if (query->resultCount() == 0)
 	{
         QMessageBox dlg(QMessageBox::Warning, tr("No match"), tr("No match found"));
         dlg.exec();
@@ -1027,7 +1056,7 @@ void DolmenApp::setConnections()
 	// reset global project path
     connect(current_project, SIGNAL(project_pathSet(QString)), this, SLOT(setGlobalProjectPath(QString)));
 	// read/write error
-    connect(current_project, SIGNAL(file_error(QString&)), this, SLOT(warnUser(QString&)));
+    connect(current_project, SIGNAL(file_error(QString)), this, SLOT(warnUser(QString)));
 	// update browser header
     connect(current_project, SIGNAL(project_saved()), corpus_browser, SLOT(resetLabels()));
 	// update browser labels
@@ -1042,8 +1071,11 @@ void DolmenApp::setConnections()
     connect(current_project, SIGNAL(project_startImportingFolder(int)), this, SLOT(displayImportProgressBar(int)));
     connect(current_project, SIGNAL(project_fileImported(int)), this, SLOT(updateImportProgressBar(int)));
 	// bookmarks
-    connect(current_project, SIGNAL(project_bookmarksModified(QList<Bookmark*>)),
-            bookmark_browser, SLOT(redraw(QList<Bookmark*>)));
+    connect(current_project, SIGNAL(project_bookmarksModified(QList<IBrowserElement*>)),
+            bookmark_browser, SLOT(redraw(QList<IBrowserElement*>)));
+    // scripts
+//    connect(current_project, SIGNAL(project_scriptsModified(QList<IBrowserElement*>)),
+//            script_browser, SLOT(redraw(QList<IBrowserElement*>)));
     // add file to database
     connect(current_project, SIGNAL(project_newFileAdded(DFile*)), m_db, SLOT(addFile(DFile*)));
     connect(current_project, SIGNAL(saveFileMetadata(DFile*)), m_db, SLOT(saveFileMetadata(DFile*)));
@@ -1112,7 +1144,7 @@ void DolmenApp::updateImportProgressBar(int count)
 	}
 }
 
-void DolmenApp::warnUser(QString &msg)
+void DolmenApp::warnUser(QString msg)
 {
 	QMessageBox::critical(this, tr("Error"), msg, QMessageBox::Ok, QMessageBox::NoButton);
 }

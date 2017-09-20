@@ -104,7 +104,7 @@ QStringList QueryView::getDisplayLines(int *count_mismatches, bool discardCorrec
     QStringList labels = QStringList();
     Grammar *grammar = query->grammar();
 
-    foreach(const SearchMatchPtr &match, query->results())
+    for (const SearchMatchPtr &match : query->results())
     {
         if (!discardCorrect || match->hasDivergingAnnotations(grammar))
         {
@@ -116,7 +116,7 @@ QStringList QueryView::getDisplayLines(int *count_mismatches, bool discardCorrec
         {
             ++(*count_mismatches);
 
-            foreach (const SearchMatchPtr &m, match->siblings())
+            for (const SearchMatchPtr &m : match->siblings())
             {
                 labels << m->toHtmlWithError();
                 this->matches << m;
@@ -130,7 +130,7 @@ QStringList QueryView::getDisplayLines(int *count_mismatches, bool discardCorrec
 QString QueryView::getMatchLabel(int count_mismatches) const
 {
     QString txt, percent;
-    int size = query->results().size();
+    int size = query->resultCount();
     if (matches.size() < 2)
         txt = tr("  %1 match").arg(size);
     else

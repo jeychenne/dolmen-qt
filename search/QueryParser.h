@@ -103,7 +103,7 @@ public:
 	QString error();
 
 signals:
-	void error_search(QString &msg);
+    void error_search(QString msg);
 
 private:
 	Project *project;
