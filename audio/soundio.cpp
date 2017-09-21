@@ -29,45 +29,46 @@
 #define DM_KEEP_PLAYING 0
 #define DM_STOP_PLAYING 1
 
-CallbackData::CallbackData(SndfileHandle *fh, sf_count_t startf, sf_count_t endf)
+CallbackData::CallbackData(SndfileHandle &fh, sf_count_t startf, sf_count_t endf) :
+    sndfile(fh)
 {
-	sndfile		= fh;
 	start_frame	= position = startf;
 	end_frame	= endf;
 	length		= endf - startf;
 	paused = false;
-    buffer = (float *) malloc(sizeof(float) * BUFFER_SIZE * sndfile->channels());
+    buffer = (float *) malloc(sizeof(float) * BUFFER_SIZE * sndfile.channels());
 
 #ifdef Q_OS_MAC
 	outputrate = MAC_SAMPLE_RATE;
 	nchannels  = 2;
     ratio      = outputrate / (double)fh->samplerate(); //TODO: refactor
 #else
-	outputrate = sndfile->samplerate();
-	nchannels  = sndfile->channels();
+    outputrate = sndfile.samplerate();
+    nchannels  = sndfile.channels();
 #endif
 
-}
-
-bool CallbackData::needsResampling() const
-{
-#ifdef Q_OS_MAC
-    return ratio != 1.0;
-#else
-    return false;
-#endif
 }
 
 // emit signal from callback (which is a function and has no knowledge of signals/slots)
 void CallbackData::stop()
 {
-	emit finished();
+    emit finished();
+}
+
+int CallbackData::inputRate() const
+{
+    return sndfile.samplerate();
 }
 
 void CallbackData::update()
 {
-    double time = (double)position / sndfile->samplerate();
+    double time = (double)position / sndfile.samplerate();
     emit currentTime(time);
+}
+
+bool CallbackData::needsResampling() const
+{
+    return stream->getStreamSampleRate() != (unsigned int)sndfile.samplerate();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -116,7 +117,7 @@ int playback(void *outputBuffer, void *inputBuffer, unsigned int OUTPUT_BUFFER_S
       qDebug("Stream underflow detected!");
 
     // seek current file position
-    data->sndfile->seek(data->position, SEEK_SET);
+    data->sndfile.seek(data->position, SEEK_SET);
 
     size_in_sf = OUTPUT_BUFFER_SIZE / data->ratio;
     sf_count_t framesNotPlayed = data->end_frame - data->position;
@@ -128,7 +129,7 @@ int playback(void *outputBuffer, void *inputBuffer, unsigned int OUTPUT_BUFFER_S
     if (data->needsResampling())
     {
         // Read data with libsndfile
-        nread_in = data->sndfile->readf(data->buffer, size_in_sf);
+        nread_in = data->sndfile.readf(data->buffer, size_in_sf);
         // Set size of the output buffer
         nread_out = nread_in * data->ratio;
 
@@ -140,12 +141,12 @@ int playback(void *outputBuffer, void *inputBuffer, unsigned int OUTPUT_BUFFER_S
     else
     {
         //TODO: read from buffer instead of reading from file directly
-        nread_in = data->sndfile->readf(output, size_in_sf);
+        nread_in = data->sndfile.readf(output, size_in_sf);
     }
 
     data->position += nread_in;
 
-   if (data->sndfile->channels() == 1)
+   if (data->sndfile.channels() == 1)
        duplicateChannel((float*)outputBuffer, OUTPUT_BUFFER_SIZE);
 
    data->update(); // send time in the stream
@@ -190,7 +191,7 @@ int playback(void *outputBuffer, void *inputBuffer, unsigned int nframes,
 
 
     // seek to the current file position
-    data->sndfile->seek(data->position, SEEK_SET);
+    data->sndfile.seek(data->position, SEEK_SET);
 //    qDebug() << "pos: " << data->position;
 
     // how far are we from the end?
@@ -201,7 +202,7 @@ int playback(void *outputBuffer, void *inputBuffer, unsigned int nframes,
         len = nframes;
 
 
-    data->position += data->sndfile->readf(output, len);
+    data->position += data->sndfile.readf(output, len);
 
     nframes_left = (spx_uint32_t) (data->end_frame - data->position);
 

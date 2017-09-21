@@ -33,16 +33,17 @@ SoundPlayer::SoundPlayer(QObject *parent, CallbackData *data): QThread(parent)
 //	qDebug("init output thread");
 	this->data = data;
 	m_stream = new RtAudio(DM_SOUND_API);
+    data->stream = m_stream;
 	m_params = new RtAudio::StreamParameters;
 	m_params->deviceId = m_stream->getDefaultOutputDevice();
 #ifdef Q_OS_MAC
 	m_params->nChannels = 2;
 #else
-	m_params->nChannels = data->sndfile->channels();
+    m_params->nChannels = data->sndfile.channels();
 #endif
 	m_params->firstChannel = 0;
 	m_options = new RtAudio::StreamOptions;
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
 	m_options->flags = RTAUDIO_ALSA_USE_DEFAULT;
 #elif defined(Q_OS_MAC)
 	if (data->sndfile->channels() == 1)
@@ -73,8 +74,12 @@ void SoundPlayer::run()
 						 data,
 						 m_options);
 //    qDebug("Stream opened...");
-    if (data->needsResampling())
-		this->initializeResampling();
+
+    if (data->inputRate() != m_stream->getStreamSampleRate())
+    {
+        this->initializeResampling();
+    }
+
 //    qDebug("getting device info");
 //    RtAudio::DeviceInfo info = m_stream->getDeviceInfo(m_stream->getDefaultOutputDevice());
 //    for (int i = 0; i < info.sampleRates.size(); ++i)
@@ -84,8 +89,8 @@ void SoundPlayer::run()
 //    qDebug("starting stream");
 	m_stream->startStream();
 
-//    qDebug("Output rate: %d", m_stream->getStreamSampleRate());
-//    qDebug("Input rate: %d", data->sndfile->samplerate());
+    qDebug("Output rate: %d", m_stream->getStreamSampleRate());
+    qDebug("Input rate: %d", data->sndfile.samplerate());
 
     while (m_stream->isStreamRunning())
         QThread::msleep(2); // wait 2 ms
@@ -132,10 +137,10 @@ SoundPlayer::~SoundPlayer()
 void SoundPlayer::initializeResampling()
 {
 	int error = 0;
-    spx_uint32_t input_rate = (spx_uint32_t) data->sndfile->samplerate();
+    spx_uint32_t input_rate = (spx_uint32_t) data->sndfile.samplerate();
     spx_uint32_t output_rate = (spx_uint32_t) m_stream->getStreamSampleRate();
 
-    data->resampler = speex_resampler_init(data->sndfile->channels(), input_rate, output_rate, DM_SOUND_QUALITY, &error);
+    data->resampler = speex_resampler_init(data->sndfile.channels(), input_rate, output_rate, DM_SOUND_QUALITY, &error);
 
 	if (error != 0)
 	{

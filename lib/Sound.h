@@ -74,7 +74,7 @@ private slots:
 	void cleanupThread();
 
 private:
-    SndfileHandle *m_sound_file;
+    SndfileHandle m_sound_file;
     CallbackData *m_callback_data;
 	SoundPlayer *m_player;
 

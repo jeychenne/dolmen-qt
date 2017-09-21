@@ -31,7 +31,6 @@
 Sound::Sound(const QString &path) : DFile()
 {
 	m_path = path;
-	m_sound_file = NULL; // the sound file is only loaded if needed
 	m_player = NULL;
 
 	QString ext = QFileInfo(path).suffix().toLower();
@@ -41,15 +40,16 @@ Sound::Sound(const QString &path) : DFile()
 
 void Sound::setFileHandle()
 {
-	if (m_sound_file == NULL)
+    if (!m_sound_file)
 	{
 		QFileInfo info(m_path);
 
 		if (info.exists())
+
 #ifdef Q_OS_WIN
-            m_sound_file = new SndfileHandle(m_path.toStdString().c_str());
-#else // FIXME: On Mac and Linux, the above crashes if there's a non-ASCII character in the path.
-            m_sound_file = new SndfileHandle(m_path.toUtf8().data());
+            m_sound_file = SndfileHandle((LPCWSTR*)m_path.data());
+#else
+            m_sound_file = SndfileHandle(m_path.toUtf8().data());
 #endif
         // TODO: add code to check that the file handle is in a consistent state...
 		else
@@ -258,13 +258,13 @@ bool Sound::isPaused() const
 int Sound::nchannels()
 {
 	this->setFileHandle();
-	return m_sound_file->channels();
+    return m_sound_file.channels();
 }
 
 double Sound::length()
 {
 	this->setFileHandle();
-	return (double) m_sound_file->frames() / (double) m_sound_file->samplerate();
+    return (double) m_sound_file.frames() / (double) m_sound_file.samplerate();
 }
 
 void Sound::stop()
@@ -280,24 +280,24 @@ void Sound::initializeCallbackData(double start, double end)
 {
 	int startf = time2frame(start);
 	int endf = time2frame(end);
-	m_callback_data = new CallbackData(m_sound_file, startf, endf);
+    m_callback_data = new CallbackData(m_sound_file, startf, endf);
 }
 
 double Sound::frame2time(size_t f) const
 {
 	//this->setFileHandle();
 
-	return (double)f / (double)(m_sound_file->samplerate());
+    return (double)f / (double)(m_sound_file.samplerate());
 }
 
 int Sound::samplerate() const
 {
-	return m_sound_file->samplerate();
+    return m_sound_file.samplerate();
 }
 
 size_t Sound::nframes() const
 {
-    return m_sound_file->frames();
+    return m_sound_file.frames();
 }
 
 
@@ -305,32 +305,32 @@ size_t Sound::time2frame(double t) const
 {
 	//this->setFileHandle();
 
-	size_t frame = (size_t) floor(t * m_sound_file->samplerate());
+    size_t frame = (size_t) floor(t * m_sound_file.samplerate());
 
-	return MIN(frame, (size_t)(m_sound_file->frames()));
+    return MIN(frame, (size_t)(m_sound_file.frames()));
 }
 
 
 FrameVector Sound::rawFramesMono()
 {	
 	this->setFileHandle();
-	const int nbuffers = m_sound_file->frames() / BUFFER_SIZE + 1;
+    const int nbuffers = m_sound_file.frames() / BUFFER_SIZE + 1;
 	emit startLoadingData(nbuffers);
 
 	FrameVector samples;
-	samples.resize(m_sound_file->frames() * m_sound_file->channels());
+    samples.resize(m_sound_file.frames() * m_sound_file.channels());
 	dm_sample_t *ptr = samples.data();
 
-	m_sound_file->seek(0, SEEK_SET);
+    m_sound_file.seek(0, SEEK_SET);
 
 	int progress, len;
 	for (progress = 1; progress <= nbuffers; ++progress)
 	{
-		len = m_sound_file->readf(ptr, BUFFER_SIZE);
-		ptr += len * m_sound_file->channels();
+        len = m_sound_file.readf(ptr, BUFFER_SIZE);
+        ptr += len * m_sound_file.channels();
 		emit bufferLoaded(progress);
 	}
-	m_sound_file->seek(0, SEEK_SET);
+    m_sound_file.seek(0, SEEK_SET);
 
 	return samples;
 }
@@ -366,13 +366,13 @@ QPair<FrameVector,FrameVector> Sound::rawFramesStereo()
 bool Sound::isMono()
 {
 	this->setFileHandle();
-	return m_sound_file->channels() == 1;
+    return m_sound_file.channels() == 1;
 }
 
 bool Sound::isStereo()
 {
 	this->setFileHandle();
-	return m_sound_file->channels() == 2;
+    return m_sound_file.channels() == 2;
 }
 
 void Sound::cleanupThread()
@@ -397,9 +397,5 @@ void Sound::cleanupThread()
 
 Sound::~Sound()
 {
-	if (m_sound_file)
-	{
-		delete m_sound_file;
-		m_sound_file = NULL;
-	}
+
 }

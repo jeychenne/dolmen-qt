@@ -30,6 +30,10 @@
 #include <QVector>
 #include <QDebug>
 
+#ifdef Q_OS_WIN
+#define ENABLE_SNDFILE_WINDOWS_PROTOTYPES
+#endif
+
 #include <sndfile.hh>
 #include <speex/speex_resampler.h>
 #include <audio/RtAudio.h>
@@ -51,7 +55,7 @@ We use Speex to resample the audio when necessary.
     #define DM_SOUND_API RtAudio::MACOSX_CORE
 	#define MAC_SAMPLE_RATE 44100.0
 #else
-	#define DM_SOUND_API RtAudio::LINUX_ALSA
+    #define DM_SOUND_API RtAudio::LINUX_ALSA
 #endif
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -73,21 +77,25 @@ class CallbackData : public QObject
 	Q_OBJECT
 
 public:
-	CallbackData(SndfileHandle *fh, sf_count_t startf, sf_count_t endf);
-	SndfileHandle	*sndfile;
+    CallbackData(SndfileHandle &fh, sf_count_t startf, sf_count_t endf);
+    SndfileHandle	sndfile;
+    RtAudio *stream = nullptr;
 	double			outputrate;
 	int				nchannels; // output parameters
 	sf_count_t		start_frame, end_frame, position, length;
     float           *buffer;
 	bool paused;
 
-	bool needsResampling() const;
     void update(); // send signal
+
+    bool needsResampling() const;
 
     SpeexResamplerState *resampler;
 	double ratio;
 
 	void stop(); // emits finished();
+
+    int inputRate() const;
 
 signals:
 	void finished();
