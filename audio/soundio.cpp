@@ -41,7 +41,7 @@ CallbackData::CallbackData(SndfileHandle &fh, sf_count_t startf, sf_count_t endf
 #ifdef Q_OS_MAC
 	outputrate = MAC_SAMPLE_RATE;
 	nchannels  = 2;
-    ratio      = outputrate / (double)fh->samplerate(); //TODO: refactor
+    ratio      = outputrate / (double)fh.samplerate(); //TODO: refactor
 #else
     outputrate = sndfile.samplerate();
     nchannels  = sndfile.channels();
@@ -126,7 +126,7 @@ int playback(void *outputBuffer, void *inputBuffer, unsigned int OUTPUT_BUFFER_S
     if (size_in_sf > framesNotPlayed)
         size_in_sf = framesNotPlayed;
 
-    if (data->needsResampling())
+    if (true) //data->needsResampling())
     {
         // Read data with libsndfile
         nread_in = data->sndfile.readf(data->buffer, size_in_sf);

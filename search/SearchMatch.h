@@ -27,14 +27,9 @@
 #define QUERYMATCH_H
 
 #include <set>
+#include <memory>
 #include <QObject>
 #include <QList>
-
-#ifdef __APPLE__
-#include <boost/tr1/memory.hpp>
-#else
-#include <memory>
-#endif
 
 #include "dolmen.h"
 #include "lib/DFile.h"
@@ -45,12 +40,7 @@
 #include "lib/Grammar.h"
 
 class SearchMatch;
-
-#ifdef __APPLE__
-typedef boost::shared_ptr<SearchMatch> SearchMatchPtr;
-#else
 typedef std::shared_ptr<SearchMatch> SearchMatchPtr;
-#endif
 
 uint qHash(const SearchMatchPtr &p);
 

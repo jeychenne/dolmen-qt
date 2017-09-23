@@ -118,7 +118,11 @@ void init_treeItem(QTreeWidgetItem *item, VFileNode *vfile)
 			icon = QIcon::fromTheme("folder");
 		else
 		{
+#ifdef Q_OS_MAC
+            icon = QIcon(":/icons/16x16/folder_mac.png");
+#else
             icon = QIcon(":/icons/16x16/folder.png");
+#endif
 		}
 	}
 	else if (isInstance(vfile, VFile))
@@ -150,20 +154,23 @@ void init_treeItem(QTreeWidgetItem *item, VFileNode *vfile)
  ***                               CLASS FILE_BROWSER                                          ****
  **************************************************************************************************/
 
-CorpusBrowser::CorpusBrowser(Project * project, PraatInstance *praat, QLabel *project_label) :
+CorpusBrowser::CorpusBrowser(Project * project, PraatInstance *praat) :
 	QTreeWidget()
 {
 	m_project		= project;
 	m_praat			= praat;
-	label_project	= project_label;
 
 	setFocusPolicy(Qt::NoFocus);
 
 #ifdef Q_OS_MAC // color the sidebar (as in Mail or Finder)
 	QPalette p(this->palette());
 	p.setColor(QPalette::Base, "#dce4eb");
+    //auto mac_color = p.color(QPalette::Base);
 	setPalette(p);
-	setStyleSheet("QTreeWidget { border: 0px; }");
+    setStyleSheet(R"_(QTreeWidget { border: 0px; }
+                  QHeaderView::section {
+                  background-color: #dce4eb;
+                  })_");
 #endif
 
 	mv_buffer = QQueue<Movement*>();
@@ -193,12 +200,9 @@ CorpusBrowser::CorpusBrowser(Project * project, PraatInstance *praat, QLabel *pr
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemSelected(QTreeWidgetItem*)));
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), SLOT(onRightClick(const QPoint &)));
 
-#ifdef Q_OS_MAC
-	headerItem()->setHidden(true);
-	connect(m_project, SIGNAL(project_saved()), this, SLOT(updateTitle()));
-#else
-	headerItem()->setText(0, "");
-#endif
+    //headerItem()->setText(0, "");
+    headerItem()->setHidden(true);
+
 }
 
 void CorpusBrowser::onItemSelected(QTreeWidgetItem *item)
@@ -555,21 +559,11 @@ void CorpusBrowser::updateTree(VFolder *vfolder)
 //	QString label = vfolder->label();
 //	if (m_project->hasUnsavedChanges())
 //		label += "*";
-#ifdef Q_OS_MAC
-	label_project->setText(m_project->screenName());
-#else
 	this->headerItem()->setText(0, m_project->screenName());
-#endif
+
 	buildNode(vfolder);
 	//this->expandToDepth(0);
     resetLabels();
-}
-
-void CorpusBrowser::updateTitle()
-{
-#ifdef Q_OS_MAC
-	label_project->setText(m_project->screenName());
-#endif
 }
 
 void CorpusBrowser::clearProject()
@@ -679,13 +673,8 @@ void CorpusBrowser::deleteProperty(Property *tag)
 
 void CorpusBrowser::setHeaderStar()
 {
-#ifdef Q_OS_MAC
-	label_project->setText(m_project->screenName());
-	label_project->setToolTip(m_project->path());
-#else
 	headerItem()->setText(0, m_project->screenName());
 	headerItem()->setToolTip(0, m_project->path());
-#endif
 }
 
 

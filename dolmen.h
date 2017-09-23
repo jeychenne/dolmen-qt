@@ -62,13 +62,6 @@
 
 #include <memory>
 
-#ifdef Q_OS_OSX
-#include <boost/make_shared.hpp>
-using boost::make_shared;
-#else
-using std::make_shared;
-#endif
-
 
 
 // application variables

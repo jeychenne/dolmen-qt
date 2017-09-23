@@ -807,7 +807,7 @@ void DolmenApp::setBrowserBar()
 {
     m_sidebar = new FileSidebar(m_toolbar);
 
-    corpus_browser = new CorpusBrowser(current_project, Global::Praat, m_sidebar->label());
+    corpus_browser = new CorpusBrowser(current_project, Global::Praat);
     bookmark_browser = new BookmarkBrowser;
 //    script_browser = new ScriptBrowser; (uncomment connection with redraw)
 
@@ -818,7 +818,6 @@ void DolmenApp::setBrowserBar()
     m_sidebar->showCorpus();
     vlayout_browser_bar->addWidget(m_sidebar);
 
-    connect(m_sidebar, SIGNAL(updateUi()), corpus_browser, SLOT(updateTitle()));
     connect(current_project, SIGNAL(project_modified(VFolder*)), m_sidebar, SLOT(showCorpus()));
 }
 

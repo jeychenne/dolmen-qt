@@ -2,9 +2,9 @@
 
 # first run macdeployqt to copy the frameworks, then run this script to fix the paths
 
-SRCDIR="$HOME/dev/build-Release"
+SRCDIR="$HOME/Devel/dolmen"
 #LIBDIR="$HOME/Devel/dmdynlibs"
-OUTDIR="$HOME/dev/build-Release"
+OUTDIR="$HOME/Devel/build-dolmen-Release"
 RESOURCES="$OUTDIR/Dolmen.app/Contents/Resources"
 FRAMEWORKS="$OUTDIR/Dolmen.app/Contents/Frameworks"
 
@@ -18,21 +18,22 @@ cd $OUTDIR
 
 # otool -L to check the dependencies of the executable
 
-OLDLIB="/Users/julien/Qt/5.3/clang_64/lib"
+OLDLIB="@rpath"
 NEWLIB="@executable_path/../Frameworks"
 BIN="Dolmen.app/Contents/MacOS/Dolmen"
 
-QTWIDGETS="QtWidgets.framework/Versions/5/QtWidgets"
 QTCORE="QtCore.framework/Versions/5/QtCore"
-QTSVG="QtSvg.framework/Versions/5/QtSvg"
 QTGUI="QtGui.framework/Versions/5/QtGui"
-QTSQL="QtSql.framework/Versions/5/QtSql"
-QTSCRIPT="QtScript.framework/Versions/5/QtScript"
 QTPRINT="QtPrintSupport.framework/Versions/5/QtPrintSupport"
-QTXML="QtXml.framework/Versions/5/QtXml"
+QTSQL="QtSql.framework/Versions/5/QtSql"
+QTSVG="QtSvg.framework/Versions/5/QtSvg"
+QTWIDGETS="QtWidgets.framework/Versions/5/QtWidgets"
+
+
+#QTXML="QtXml.framework/Versions/5/QtXml"
 QWT="qwt.framework/Versions/6/qwt"
-QTOPENGL="QtOpenGL.framework/Versions/5/QtOpenGL"
-QTCONCURRENT="QtConcurrent.framework/Versions/5/QtConcurrent"
+#QTOPENGL="QtOpenGL.framework/Versions/5/QtOpenGL"
+#QTCONCURRENT="QtConcurrent.framework/Versions/5/QtConcurrent"
 
 OPT="/opt/local/lib"
 FLAC="libFLAC.8.dylib"
@@ -51,7 +52,7 @@ function change_lib {
 
 
 # change framework paths
-for F in $QTWIDGETS $QTCORE $QTSVG $QTGUI $QTSQL $QTSCRIPT $QWT
+for F in $QTWIDGETS $QTCORE $QTSVG $QTGUI $QTSQL $QWT
 do
 	change_name $F $BIN
 done
