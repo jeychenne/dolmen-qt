@@ -201,7 +201,7 @@ void MetadataSideBar::setNothingToDisplay()
     main_layout->addWidget(tabs);
     main_layout->setContentsMargins(0, 0, 5, 0);
     info_tab->setLayout(vl);
-    tabs->addTab(info_tab, tr("Info"));
+    tabs->addTab(info_tab, tr("File properties"));
     this->setLayout(main_layout);
 }
 

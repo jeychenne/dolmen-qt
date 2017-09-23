@@ -51,7 +51,6 @@ class FileSidebar : public QWidget
 
 public:
     FileSidebar(QWidget *parent = NULL);
-    QLabel *label() const;
     void setCorpus(CorpusBrowser *value);
     void setBookmarks(BookmarkBrowser *value);
     void setScripts(ScriptBrowser *value);
@@ -63,13 +62,12 @@ signals:
     void updateUi();
 
 private slots:
-	void updateTitle(int);
     void toggleCorpus(bool);
     void toggleBookmarks(bool);
     void toggleScripts(bool);
 
 private:
-    QLabel *label_project;
+    QLabel *label;
     QStackedWidget *stack;
     CorpusBrowser *corpus;
     BookmarkBrowser *bookmarks;

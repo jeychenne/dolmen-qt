@@ -74,7 +74,7 @@ class CorpusBrowser : public QTreeWidget
 	Q_OBJECT
 
 public:
-	CorpusBrowser(Project *, PraatInstance *, QLabel *);
+    CorpusBrowser(Project *, PraatInstance *);
 
 public slots:
 	void updateTree(VFolder *vfolder); // keep in sync with the project
@@ -93,8 +93,6 @@ public slots:
 	void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
 	void rowsInserted(const QModelIndex &parent, int start, int end);
 	void dropEvent(QDropEvent *event);
-
-	void updateTitle();
 
     void clearProject();
 

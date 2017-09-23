@@ -1,12 +1,8 @@
 #ifndef BOOKMARKEDITOR_H
 #define BOOKMARKEDITOR_H
 
-#ifdef __APPLE__
-#include <boost/tr1/memory.hpp>
-#else
-#include <memory>
-#endif
 
+#include <memory>
 #include <QDialog>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -17,12 +13,8 @@
 #include "lib/Bookmark.h"
 
 
-
-#ifdef __APPLE__
-typedef boost::shared_ptr<Bookmark> BookmarkPtr;
-#else
 typedef std::shared_ptr<Bookmark> BookmarkPtr;
-#endif
+
 
 
 class BookmarkEditor : public QDialog

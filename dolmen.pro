@@ -6,7 +6,7 @@
 
 QT += core gui sql svg widgets # webkitwidgets
 
-#QMAKE_CXXFLAGS += -std=c++14
+QMAKE_CXXFLAGS += -std=c++14
 CONFIG += c++14
 
 TEMPLATE = app
@@ -20,26 +20,26 @@ INCLUDEPATH += extra/onigmo extra/onigmo/enc/unicode extra/lua
 macx {
     #Qt 5 stuff
     QMAKE_MACOSX_DEPLOYMENT_TARGET=10.7
-    QMAKE_MAC_SDK=macosx10.9
+	QMAKE_MAC_SDK=macosx10.13
 
 	TARGET = Dolmen
 
 	#NOTE: /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources (system icons) on Leopard+
-	ICON = icons/dolmen.icns
+	ICON = icons/sound_wave.icns
 
 	LIBS += -framework CoreAudio -framework CoreServices
 
 	INCLUDEPATH += /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/Headers \
 		/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers
 
-        INCLUDEPATH += /usr/local/include /opt/local/include /usr/local/include/qwt
+	INCLUDEPATH += /usr/local/include /opt/local/include /usr/local/qwt-6.1.3/lib/qwt.framework/Headers
 	LIBS += -L/opt/local/lib #-lsndfile
 
         DEFINES += __MACOSX_CORE__ macintosh useCarbon=1
 	# DEFINES += QWT_DLL
 	# static link
         LIBS += /opt/local/lib/libspeexdsp.a /opt/local/lib/libogg.a /opt/local/lib/libvorbisenc.a /opt/local/lib/libvorbis.a /opt/local/lib/libsndfile.a
-        LIBS += -F/usr/local/qwt-6.1.0/lib -framework qwt /opt/local/lib/libz.a -L/usr/local/lib -lFLAC
+		LIBS += -F/usr/local/qwt-6.1.3/lib -framework qwt /opt/local/lib/libz.a -L/usr/local/lib -lFLAC
 	QTPLUGIN += qsqlite
 
 } else {

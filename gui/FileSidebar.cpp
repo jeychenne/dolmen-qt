@@ -44,13 +44,23 @@ FileSidebar::FileSidebar(QWidget *parent) :
 	btn_corpus = makeButton(group, this, QIcon(":/icons/32x32/corpus.png"), tr("Corpus"));
 	btn_bookmarks = makeButton(group, this, QIcon(":/icons/32x32/bookmark.png"), tr("Bookmarks"));
 //    btn_scripts = makeButton(group, this, QIcon(":/icons/32x32/console.png"), tr("Scripts"));
-
+#ifdef Q_OS_MAC
+    tool_layout->addSpacing(5);
+#endif
     tool_layout->addWidget(btn_corpus);
     tool_layout->addWidget(btn_bookmarks);
 //    tool_layout->addWidget(btn_scripts);
     tool_layout->addStretch();
     btn_corpus->toggle();
 
+    label = new QLabel(this);
+    label->setContentsMargins(5, 5, 0, 0);
+    auto font = label->font();
+    font.setBold(true);
+    label->setFont(font);
+    label->setText("Corpus");
+
+    layout->addWidget(label);
     layout->addWidget(stack);
     layout->addLayout(tool_layout);
     setLayout(layout);
@@ -83,10 +93,6 @@ QToolButton *FileSidebar::makeButton(QButtonGroup *group, QWidget *parent, const
     group->addButton(button);
 
     return button;
-}
-QLabel * FileSidebar::label() const
-{
-    return label_project;
 }
 
 void FileSidebar::setCorpus(CorpusBrowser *value)
@@ -123,36 +129,30 @@ void FileSidebar::addItem(QWidget *w)
     stack->addWidget(w);
 }
 
-void FileSidebar::updateTitle(int index)
-{
-#ifdef Q_OS_MAC
-	if (index == 0)
-        emit updateUi();
-	else
-        label_project->setText(tr("BOOKMARKS"));
-#else
-    Q_UNUSED(index)
-#endif
-}
-
 void FileSidebar::toggleCorpus(bool checked)
 {
-    if (checked) {
+    if (checked)
+    {
         showCorpus();
+        label->setText("Corpus");
     }
 }
 
 void FileSidebar::toggleBookmarks(bool checked)
 {
-    if (checked) {
+    if (checked)
+    {
         stack->setCurrentWidget(bookmarks);
+        label->setText("Bookmarks");
     }
 }
 
 void FileSidebar::toggleScripts(bool checked)
 {
-    if (checked) {
+    if (checked)
+    {
         stack->setCurrentWidget(scripts);
+        label->setText("Scripts");
     }
 }
 

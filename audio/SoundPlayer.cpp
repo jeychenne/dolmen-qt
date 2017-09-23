@@ -46,7 +46,7 @@ SoundPlayer::SoundPlayer(QObject *parent, CallbackData *data): QThread(parent)
 #ifdef Q_OS_LINUX
 	m_options->flags = RTAUDIO_ALSA_USE_DEFAULT;
 #elif defined(Q_OS_MAC)
-	if (data->sndfile->channels() == 1)
+    if (data->sndfile.channels() == 1)
         m_options->flags = RTAUDIO_NONINTERLEAVED | RTAUDIO_SCHEDULE_REALTIME;
 	else
 		m_options->flags = 0;
@@ -75,7 +75,7 @@ void SoundPlayer::run()
 						 m_options);
 //    qDebug("Stream opened...");
 
-    if (data->inputRate() != m_stream->getStreamSampleRate())
+    //if (data->inputRate() != m_stream->getStreamSampleRate())
     {
         this->initializeResampling();
     }
