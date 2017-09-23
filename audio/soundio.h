@@ -31,7 +31,8 @@
 #include <QDebug>
 
 #ifdef Q_OS_WIN
-#define ENABLE_SNDFILE_WINDOWS_PROTOTYPES
+#define ENABLE_SNDFILE_WINDOWS_PROTOTYPES 1
+#include <windows.h>
 #endif
 
 #include <sndfile.hh>

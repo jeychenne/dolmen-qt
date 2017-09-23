@@ -53,7 +53,7 @@ win32-g++|win32-msvc2017 {
 #LIBS += -LC:/Qt/Qt5.6.0/5.6/mingw49_32/plugins/sqldrivers -lqsqlite
 
 CONFIG += exceptions
-INCLUDEPATH += C:/Lib/include C:/Lib/libsndfile/include C:/Lib/rtaudio/include C:/Lib/libspeex/include
+INCLUDEPATH += C:/Lib/include C:/Lib/include/qwt C:/Lib/libsndfile/include C:/Lib/rtaudio/include C:/Lib/libspeex/include
 LIBS += -lws2_32 -lwinmm -lole32 -LC:/Lib/libsndfile/lib -llibsndfile-1 -ldsound -LC:/Lib/libspeex/lib -llibspeexdsp -LC:/Lib/qwt -lqwt
 LIBS += -LC:/Lib/zlib/lib -lz.dll
 DEFINES += __WINDOWS_DS__ WINDOWS

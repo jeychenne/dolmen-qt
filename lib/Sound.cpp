@@ -47,7 +47,7 @@ void Sound::setFileHandle()
 		if (info.exists())
 
 #ifdef Q_OS_WIN
-            m_sound_file = SndfileHandle((LPCWSTR*)m_path.data());
+            m_sound_file = SndfileHandle((LPCWSTR)m_path.data());
 #else
             m_sound_file = SndfileHandle(m_path.toUtf8().data());
 #endif
