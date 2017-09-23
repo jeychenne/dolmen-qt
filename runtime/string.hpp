@@ -24,13 +24,8 @@
 #include "error.hpp"
 #include "utils/ref_count.hpp"
 
+#if defined(__APPLE__) || (__cplusplus > 201402L)
 #include <string_view>
-
-#ifdef __APPLE__
-#include <string_view>
-#elif __cplusplus > 201402L
-#include <string_view>
-#elif defined(Q_OS_UNIX)
 #else
 #include "extra/string_view.hpp"
 

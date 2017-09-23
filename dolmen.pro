@@ -76,7 +76,7 @@ ICON = icons/sound_wave.png
 
 DEFINES += __LINUX_ALSA__ UNIX
 
-INCLUDEPATH += /usr/include/gtk-2.0 /usr/include/gio-unix-2.0/
+INCLUDEPATH += /usr/include/gtk-2.0 /usr/include/qwt /usr/include/gio-unix-2.0/
 
 LIBS += -lpthread -lasound -lsndfile -lspeexdsp -lz -lqwt-qt5
 
