@@ -1,9 +1,9 @@
 ## Simple queries
 
 Dolmen offers a number of features to find concordances in a corpus. It also allows user to customize its search interface by creating search grammars 
-specifically tailored for a project. Concordancing features are available in the `Conc` menu.
+specifically tailored for a project. Concordancing features are available in the `Search` menu.
 
-To run a new query, click on `Conc > Find concordances...` or use the shortcut `ctrl+F` (or `cmd+f` on macOS). This will open a new search window, which
+To run a new query, click on `Search > Find concordances...` or use the shortcut `ctrl+F` (or `cmd+f` on macOS). This will open a new search window, which
 lets you search through all the *documents* (i.e. plain text files) or *annotations* in your corpus . We 
 will focus on annotations here, but things work in a similar way for documents, mutatis mutandis. 
 
