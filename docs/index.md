@@ -23,13 +23,13 @@ please write to jeychenne@gmail.com.
 
 ### Dolmen 2 (preview version)
 
-Dolmen 1.9 is the latest Dolmen: it is a preview version of Dolmen 2.0, and is currently only available for Windows 
-(other platforms will follow once Dolmen 2.0 is released). Although it is still lacking some features and its documentation is incomplete, 
-all Windows users are encouraged to upgrade to this version as it contains many improvements and bug fixes. 
+Dolmen 1.9 is the latest Dolmen: it is a preview version of Dolmen 2.0, currently available for Windows and Mac. Although it is still lacking some features and its documentation is incomplete, 
+all users are encouraged to upgrade to this version as it contains many improvements and bug fixes. 
 
-Download version 1.9.1 (14/9/2017):
+Download version 1.9.2 (23/9/2017):
 
 - Windows 7 and later: [dolmen_setup.exe](http://julieneychenne.info/files/v2/dolmen_setup.exe)
+- MacOS 10.7 and later: [dolmen.dmg](http://julieneychenne.info/files/v2/dolmen.dmg)
 
 Note that this version can be installed side by side with the previous version (Dolmen 1.3).
 

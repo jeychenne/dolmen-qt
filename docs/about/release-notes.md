@@ -1,9 +1,10 @@
 ## Changelog for Dolmen
 
 
-### Version 1.9.2 (XX/9/2017)
+### Version 1.9.2 (23/9/2017)
 
 * Updated RTAudio to version 5.0.0
+* Improved sound playback on all platforms
 * The last query is now remembered
 * Small performance improvements in queries
 * Fixed regression for search grammars introduced in 1.9.1
