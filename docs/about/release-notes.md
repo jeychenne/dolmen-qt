@@ -1,5 +1,8 @@
 ## Changelog for Dolmen
 
+### Version 1.9.3 (23/11/2017)
+
+* Fixed opening a TextGrid with Sound in Praat, which sometimes opened the wrong interval
 
 ### Version 1.9.2 (23/9/2017)
 
