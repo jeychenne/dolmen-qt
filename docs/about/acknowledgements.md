@@ -1,7 +1,7 @@
 Acknowledgements
 ================
 
-Dolmen uses the following open source libraries/projects:
+Dolmen uses the following open source components:
 
 - Qt, from the Qt Project (LGPL), see <a href="http://qt-project.org">qt-project.org</a>
 - libsndfile, developed by Erik de Castro Lopo (LGPL), see <a href="http://www.mega-nerd.com">www.mega-nerd.com</a>

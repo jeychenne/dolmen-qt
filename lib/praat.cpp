@@ -122,10 +122,8 @@ void PraatInstance::checkProcessExitStatus(int exitCode)
 
 void PraatInstance::openInterval(int tier, double xmin, const QString &textgrid, const QString &sound)
 {
-    QString script, min;
+    QString script;
     xmin += 0.0001; // make sure we're within the interval
-
-    min.sprintf("%.6f", xmin);
 
 	if (sound.isEmpty())
 	{
@@ -148,7 +146,7 @@ void PraatInstance::openInterval(int tier, double xmin, const QString &textgrid,
 				"	Move cursor to... 'begin'\n"
 				"	Move cursor to begin of selection\n"
 				"endeditor\n\n"
-                ).arg(tier).arg(textgrid).arg(min);
+                ).arg(tier).arg(textgrid).arg(xmin, 0, 'f', 6);
 	}
 	else
 	{
@@ -174,7 +172,7 @@ void PraatInstance::openInterval(int tier, double xmin, const QString &textgrid,
 				"	Move cursor to... 'begin'\n"
 				"	Move cursor to begin of selection\n"
 				"endeditor\n\n"
-				).arg(tier).arg(sound).arg(textgrid).arg(xmin);
+                ).arg(tier).arg(sound).arg(textgrid).arg(xmin, 0, 'f', 6);
 	}
 
 	runTemporaryScript(script);
