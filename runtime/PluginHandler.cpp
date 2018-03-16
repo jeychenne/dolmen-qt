@@ -34,6 +34,11 @@ PluginHandler::PluginHandler(QWidget *parent, sol::state_view lua) :
     m_mainPlugin = NULL;
 }
 
+PluginHandler::~PluginHandler()
+{
+
+}
+
 Plugin* PluginHandler::mainPlugin() const
 {
     return m_mainPlugin;
@@ -58,12 +63,27 @@ void PluginHandler::addPlugin(Plugin *p)
     }
 }
 
-bool PluginHandler::executeMainPlugin()
+void PluginHandler::executeMainPlugin()
 {
-    // TODO: evaluate main.lua
+    QString script_name("main.lua");
+    QString script = m_mainPlugin->scriptContent(script_name);
+
+    if (!script.isEmpty()) {
+        executeScript(script_name, script);
+    }
 }
 
-PluginHandler::~PluginHandler()
+void PluginHandler::executeScript(const QString &script, const QString &content)
 {
+    if (content.isEmpty()) {
+        return;
+    }
 
+    try {
+         m_lua.script(content.toStdString());
+    }
+    catch (std::exception &e) {
+        QMessageBox::critical(m_widget, tr("Runtime error"), tr("Script \"%1\" returned the following error: %2").arg(script).arg(e.what()));
+    }
 }
+

@@ -431,15 +431,20 @@ void DolmenApp::initializeGrammars()
 
     foreach (Plugin *p, m_plugin_handler->plugins())
     {
-        auto menu = search_menu->addMenu(p->name());
+        auto grammars =  p->getGrammars();
 
-        foreach (auto g, p->getGrammars())
+        if (! grammars.isEmpty())
         {
-            auto action = menu->addAction(g->name());
+            auto menu = search_menu->addMenu(p->name());
 
-            connect(action, &QAction::triggered, [this,g]() {
-                onMainSearchClicked(g);
-            });
+            for (auto g: grammars)
+            {
+                auto action = menu->addAction(g->name());
+
+                connect(action, &QAction::triggered, [this,g]() {
+                    onMainSearchClicked(g);
+                });
+            }
         }
     }
 }
@@ -447,9 +452,11 @@ void DolmenApp::initializeGrammars()
 void DolmenApp::postInitialize()
 {
     search_menu->addSeparator();
-    auto extend_conc = new QAction(tr("How to extend this menu"));
+    auto extend_conc = new QAction(tr("How to extend this menu"), nullptr);
     search_menu->addAction(extend_conc);
     connect(extend_conc, SIGNAL(triggered()), this, SLOT(onExtendConcMenu()));
+
+    m_plugin_handler->executeMainPlugin();
 }
 
 void DolmenApp::testPlugins(QDir root, QStringList &plugins)
@@ -476,6 +483,7 @@ void DolmenApp::testPlugins(QDir root, QStringList &plugins)
                         this->setMainPlugin(plugin);
 
                     connect(plugin, SIGNAL(output(QString)), this, SLOT(output(QString)));
+                    connect(plugin, SIGNAL(scriptCalled(QString,QString)), m_plugin_handler, SLOT(executeScript(QString,QString)));
                     plugin->postInitialize();
 
                     if (plugin->hasMenu())
@@ -681,11 +689,11 @@ void DolmenApp::setFileMenu()
 void DolmenApp::setSearchMenu()
 {
     search_menu = menu->addMenu(tr("Search"));
-    auto generic_find = new QAction(tr("Find concordances..."));
+    auto generic_find = new QAction(tr("Find concordances..."), nullptr);
     generic_find->setShortcut(QKeySequence("Ctrl+f"));
     //generic_find->setToolTip(tr("Find some text in the current project"));
 
-    run_last_query = new QAction(tr("Run last query..."));
+    run_last_query = new QAction(tr("Run last query..."), nullptr);
     run_last_query->setEnabled(false);
 
     search_menu->addAction(generic_find);

@@ -451,7 +451,7 @@ bool Query::testFile(SearchNode *node, DFile *file)
 bool Query::testObject_dfile(SearchNode *node, DFile *file)
 {
 	// Currently only handles @file.description
-    QRegularExpression re(node->value(), QRegularExpression::CaseInsensitiveOption);
+    QRegularExpression re(node->value(), QRegularExpression::CaseInsensitiveOption|QRegularExpression::UseUnicodePropertiesOption);
 
 	switch (node->opcode())
 	{
@@ -867,7 +867,7 @@ QRegularExpression Query::buildPattern(QString pattern)
     }
 
     QRegularExpression re(pattern);
-    int flags = QRegularExpression::PatternOption::NoPatternOption;
+    int flags = QRegularExpression::UseUnicodePropertiesOption;
 
     if (! case_sensitive_search)
         flags |= QRegularExpression::PatternOption::CaseInsensitiveOption;

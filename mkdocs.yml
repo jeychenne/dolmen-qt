@@ -2,8 +2,11 @@ site_name: Dolmen
 use_directory_urls: false
 
 pages:
-- Getting started: index.md
+- Home: index.md
 
+- Getting started:
+    - Overview: intro/start.md
+    
 - Concordancer:
     - Simple queries: conc/simple.md
     - Complex queries: conc/complex.md

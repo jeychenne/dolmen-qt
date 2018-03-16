@@ -68,6 +68,7 @@ Query* QueryParser::parse(QString queryString, Grammar *grammar)
 	}
     QString sep = match.captured(4);
     sep.replace("%SPACE%", " ");
+    if (sep.size() == 0) sep = " ";
     query->setSeparator(sep);
     parseReturnStatement(query, match.captured(5));
 

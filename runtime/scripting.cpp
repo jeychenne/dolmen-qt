@@ -1,6 +1,7 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QDir>
 #include "utils/Global.h"
 #include "scripting.h"
@@ -253,6 +254,11 @@ static void set_shell_library(sol::state_view lua)
         dlg.exec();
     };
 
+    shell["info"] = [](const QString &msg) {
+        QMessageBox dlg(QMessageBox::Information, "Information", msg);
+        dlg.exec();
+    };
+
     shell["open_file_dialog"] = [](const char *s) {
         return QFileDialog::getOpenFileName(nullptr, QString(s));
     };
@@ -273,6 +279,10 @@ static void set_shell_library(sol::state_view lua)
             Global::Output->showMessage(msg, timeout);
         }
     };
+
+    shell["input"] = [](const char *title, const char *text, const char *label) {
+        return QInputDialog::getText(nullptr, title, text, QLineEdit::Normal, label);
+    };
 }
 
 static void set_signal_library(sol::state_view lua)
@@ -290,7 +300,7 @@ static void set_signal_library(sol::state_view lua)
 
 void initialize(sol::state_view lua)
 {
-    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table);
+    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table, sol::lib::io);
     set_string_library(lua);
     set_regex_library(lua);
     set_shell_library(lua);

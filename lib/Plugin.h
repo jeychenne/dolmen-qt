@@ -53,7 +53,7 @@ public:
     bool isValid() const;
     QString dir() const;
     QString name() const;
-    QString scriptContent(QString basename = "main.js") const;
+    QString scriptContent(QString basename = "main.lua") const;
     bool isMain() const;
     bool hasMenu() const;
     QMenu* menu() const;

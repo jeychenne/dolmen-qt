@@ -19,8 +19,8 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
-	
-	<script src="./js/jquery-1.10.2.min.js"></script>
+
+        <script src="./js/jquery-1.10.2.min.js"></script>
         <script src="./js/bootstrap-3.0.3.min.js"></script>
         <script src="./js/highlight.pack.js"></script> 
     </head>
@@ -47,7 +47,16 @@
                 <!-- Main navigation -->
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html">Getting started</a>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting started <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="intro/start/index.html">Overview</a>
+</li>
+                        </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Concordancer <b class="caret"></b></a>
@@ -128,7 +137,7 @@
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="conc/simple/index.html">
+                        <a rel="prev" href="intro/start/index.html">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -140,7 +149,7 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#welcome-to-dolmen">Welcome to Dolmen</a></li>
+        <li class="main active"><a href="#dolmen-a-platform-for-the-analysis-of-annotated-speech">Dolmen: a platform for the analysis of annotated speech</a></li>
             <li><a href="#overview">Overview</a></li>
             <li><a href="#download">Download</a></li>
             <li><a href="#installation">Installation</a></li>
@@ -149,9 +158,9 @@
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="welcome-to-dolmen">Welcome to Dolmen</h1>
+<h1 id="dolmen-a-platform-for-the-analysis-of-annotated-speech">Dolmen: a platform for the analysis of annotated speech</h1>
 <p><strong><span style="color:blue">This is the new website for Dolmen 2.0. It is currently under construction.</span>.</strong></p>
-<p>You can follow the development process on <a href="https://github.com/jeychenne/dolmen">GitHub</a>.</p>
+<p>The source code is available on <a href="https://github.com/jeychenne/dolmen">GitHub</a>.</p>
 <h2 id="overview">Overview</h2>
 <p>Dolmen is a free, open-source software toolbox for the analysis of annotated speech. It offers a user-friendly interface to manage, annotate and query language corpora. It is particularly well suited for dealing with time-aligned data. The main features it offers are: </p>
 <ul>
@@ -169,7 +178,7 @@ please write to jeychenne@gmail.com. </p>
 <h3 id="dolmen-2-preview-version">Dolmen 2 (preview version)</h3>
 <p>Dolmen 1.9 is the latest Dolmen: it is a preview version of Dolmen 2.0, currently available for Windows and Mac. Although it is still lacking some features and its documentation is incomplete, 
 all users are encouraged to upgrade to this version as it contains many improvements and bug fixes. </p>
-<p>Download version 1.9.2 (23/9/2017):</p>
+<p>Download version 1.9.4 (16/03/2018):</p>
 <ul>
 <li>Windows 7 and later: <a href="http://julieneychenne.info/files/v2/dolmen_setup.exe">dolmen_setup.exe</a></li>
 <li>MacOS 10.7 and later: <a href="http://julieneychenne.info/files/v2/dolmen.dmg">dolmen.dmg</a></li>
@@ -230,8 +239,11 @@ qmake dolmen.pro; make
             <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>var base_url = '.';</script>
-        <script data-main="./mkdocs/js/search.js" src="./mkdocs/js/require.js"></script>
-        <script src="./js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <script src="./js/base.js"></script>
+        <script src="./search/require.js"></script>
+        <script src="./search/search.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -254,12 +266,52 @@ qmake dolmen.pro; make
             </div>
         </div>
     </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>&larr;</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>&rarr;</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
+
 
     </body>
 </html>
 
 <!--
-MkDocs version : 0.16.3
-Build Date UTC : 2017-09-23 04:54:45
+MkDocs version : 0.17.3
+Build Date UTC : 2018-03-16 05:47:53
 -->

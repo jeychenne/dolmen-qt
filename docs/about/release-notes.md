@@ -1,5 +1,13 @@
 ## Changelog for Dolmen
 
+
+### Version 1.9.4 (26/11/2016)
+
+* Restore Unicode support in regular expression character classes
+* Lua scripts in plugins
+* Initialization code can be added to a script named `init.lua` at the root of a plugin
+
+
 ### Version 1.9.3 (23/11/2017)
 
 * Fixed opening a TextGrid with Sound in Praat, which sometimes opened the wrong interval

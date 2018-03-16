@@ -45,7 +45,11 @@ public:
     void setMainPlugin(Plugin *p);
     Plugin * mainPlugin() const;
     void addPlugin(Plugin *p);
-    bool executeMainPlugin();
+    void executeMainPlugin();
+
+private slots:
+    void executeScript(const QString &script, const QString &content);
+
     
 private:
     QWidget *m_widget;

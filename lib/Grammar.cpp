@@ -203,7 +203,7 @@ QStringList Grammar::matchFields(const QString &s) const
     QString pattern = ptn.join(m_separator);
     pattern.replace("{{{", "(?:"); // TODO: handle mangling in a more elegant way
     pattern.replace("}}}", ")");
-    QRegularExpression re(pattern, QRegularExpression::CaseInsensitiveOption);
+    QRegularExpression re(pattern, QRegularExpression::CaseInsensitiveOption|QRegularExpression::UseUnicodePropertiesOption);
     auto match = re.match(s);
 
     if (match.hasMatch())

@@ -75,6 +75,10 @@ bool Plugin::initialize()
 
 bool Plugin::postInitialize()
 {
+    QString script("init.lua");
+    auto content = scriptContent(script);
+    emit scriptCalled(script, content);
+
     QString msg = tr("Plugin \"%1\" successfully loaded...").arg(m_name);
     emit output(msg);
 
@@ -132,11 +136,11 @@ QString Plugin::name() const
 
 QString Plugin::scriptPath(QString basename) const
 {
-    // A script is either "main.js" at the root of the plugin, or a *.js
+    // A script is either "main.lua" or "init.lua" at the root of the plugin, or a *.lua
     // file in the "Scripts" subdirectory
     QString script = dir() + QDir::separator();
 
-    if (basename != "main.js")
+    if (basename != "main.lua" && basename != "init.lua")
         script += QString("Scripts") + QDir::separator();
 
     script += basename;
@@ -145,18 +149,18 @@ QString Plugin::scriptPath(QString basename) const
     if (info.exists())
         return script;
     else
-        return "";
+        return QString();
 }
 
 QString Plugin::scriptContent(QString basename) const
 {
     QString path = scriptPath(basename);
-    if (path == "")
-        return path;
+    if (path.isEmpty())
+        return QString();
 
     QFile file(path);
     if (! file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return "";
+        return QString();
 
     QTextStream stream(&file);
     QString text = stream.readAll();
