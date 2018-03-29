@@ -31,7 +31,7 @@ PluginHandler::PluginHandler(QWidget *parent, sol::state_view lua) :
 {
     setObjectName("Dolmen");
     m_widget = parent;
-    m_mainPlugin = NULL;
+    m_mainPlugin = nullptr;
 }
 
 PluginHandler::~PluginHandler()
@@ -65,11 +65,13 @@ void PluginHandler::addPlugin(Plugin *p)
 
 void PluginHandler::executeMainPlugin()
 {
-    QString script_name("main.lua");
-    QString script = m_mainPlugin->scriptContent(script_name);
+    if (m_mainPlugin) {
+        QString script_name("main.lua");
+        QString script = m_mainPlugin->scriptContent(script_name);
 
-    if (!script.isEmpty()) {
-        executeScript(script_name, script);
+        if (!script.isEmpty()) {
+            executeScript(script_name, script);
+        }
     }
 }
 

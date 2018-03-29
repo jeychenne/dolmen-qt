@@ -1,7 +1,10 @@
 ## Changelog for Dolmen
 
+### Version 1.9.5 (30/3/2018)
 
-### Version 1.9.4 (26/11/2016)
+* Fixed a regression introduced in 1.9.4 which caused Dolmen to crash when there was no main plugin
+
+### Version 1.9.4 (16/3/2018)
 
 * Restore Unicode support in regular expression character classes
 * Lua scripts in plugins

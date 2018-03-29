@@ -1271,7 +1271,7 @@ void DolmenApp::about()
 {
 	QMessageBox box(this);
     box.setText(tr("<p><strong>Dolmen %1</strong></p>").arg(m_version));
-    box.setInformativeText(QString::fromUtf8("<p>Copyright © 2010-2017 Julien Eychenne</p>"
+    box.setInformativeText(QString::fromUtf8("<p>Copyright © 2010-2018 Julien Eychenne</p>"
 											 "<p>Dolmen is distributed under the GNU General Public License (GPL). "
 											 "See \"License\" for details.</p>"
 											 "<p>Build date: ") +
