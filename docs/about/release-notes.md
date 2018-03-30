@@ -2,7 +2,8 @@
 
 ### Version 2.0.0 (30/3/2018)
 
-* Fixed display of non-ASCII characters in Lua scripts
+* updated sol2 library
+* fixed Lua string -> QString
 
 ### Version 1.9.5 (30/3/2018)
 
