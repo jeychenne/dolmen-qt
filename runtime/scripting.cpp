@@ -244,34 +244,34 @@ static void set_shell_library(sol::state_view lua)
     lua["shell"] = lua.create_table();
     sol::table shell = lua["shell"];
 
-    shell["warning"] = [](const QString &msg) {
+    shell["warning"] = [](QString msg) {
         QMessageBox dlg(QMessageBox::Warning, "Warning", msg);
         dlg.exec();
     };
 
-    shell["alert"] = [](const QString &msg) {
+    shell["alert"] = [](QString msg) {
         QMessageBox dlg(QMessageBox::Critical, "Error", msg);
         dlg.exec();
     };
 
-    shell["info"] = [](const QString &msg) {
+    shell["info"] = [](QString msg) {
         QMessageBox dlg(QMessageBox::Information, "Information", msg);
         dlg.exec();
     };
 
-    shell["open_file_dialog"] = [](const char *s) {
-        return QFileDialog::getOpenFileName(nullptr, QString(s));
+    shell["open_file_dialog"] = [](QString s) {
+        return QFileDialog::getOpenFileName(nullptr, s);
     };
 
-    shell["open_directory_dialog"] = [](const char *s) {
-        return QFileDialog::getExistingDirectory(nullptr, QString(s));
+    shell["open_directory_dialog"] = [](QString s) {
+        return QFileDialog::getExistingDirectory(nullptr, s);
     };
 
-    shell["save_file_dialog"] = [](const char *s) {
-        return QFileDialog::getSaveFileName(nullptr, QString(s));
+    shell["save_file_dialog"] = [](QString s) {
+        return QFileDialog::getSaveFileName(nullptr, s);
     };
 
-    shell["status"] = [](const char *msg, int timeout) {
+    shell["status"] = [](QString msg, int timeout) {
         if (Global::Output)
         {
             // Convert timeout from seconds to milliseconds
@@ -280,7 +280,7 @@ static void set_shell_library(sol::state_view lua)
         }
     };
 
-    shell["input"] = [](const char *title, const char *text, const char *label) {
+    shell["input"] = [](QString title, QString text, QString label) {
         return QInputDialog::getText(nullptr, title, text, QLineEdit::Normal, label);
     };
 }

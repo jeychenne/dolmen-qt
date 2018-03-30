@@ -35,9 +35,10 @@ template <>
 struct getter<QString> {
     QString get(lua_State* L, int index, record  &tracking) {
         tracking.use(1);
-        const char* str = lua_tostring(L, index);
+        size_t len = 0;
+        const char* str = lua_tolstring(L, index, &len);
 
-        return QString(str);
+        return QString::fromUtf8(str, int(len));
     }
 };
 

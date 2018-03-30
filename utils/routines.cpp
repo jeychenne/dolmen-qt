@@ -101,7 +101,7 @@ QString getDefaultResourcesDir()
 #elif defined(Q_OS_MAC)
     return Global::MacResourcesDir;
 #else
-    return "/usr/local/share/dolmen";
+    return "/opt/dolmen";
 #endif
 }
 

@@ -1,6 +1,5 @@
 # Dolmen: a platform for the analysis of annotated speech
 
-**<span style="color:blue">This is the new website for Dolmen 2.0. It is currently under construction.</span>.**
 
 The source code is available on [GitHub](https://github.com/jeychenne/dolmen).
 
@@ -21,19 +20,19 @@ please write to jeychenne@gmail.com.
 
 ## Download 
 
-### Dolmen 2 (preview version)
+### Dolmen 2 (current version)
 
-Dolmen 1.9 is the latest Dolmen: it is a preview version of Dolmen 2.0, currently available for Windows and Mac. Although it is still lacking some features and its documentation is incomplete, 
-all users are encouraged to upgrade to this version as it contains many improvements and bug fixes. 
+Download version 2.0.0 (30/03/2018):
 
-Download version 1.9.5 (30/03/2018):
+This version is recommended for all users.
 
 - Windows 7 and later: [dolmen_setup.exe](http://julieneychenne.info/files/v2/dolmen_setup.exe)
 - MacOS 10.7 and later: [dolmen.dmg](http://julieneychenne.info/files/v2/dolmen.dmg)
+- Linux (Ubuntu 16.04 64-bit): [dolmen-2.0.0.tar.bz2](http://julieneychenne.info/files/v2/dolmen-2.0.0-linux.tar.bz2)
+- source code: available on [GitHub](https://github.com/jeychenne/dolmen/releases)
 
-Note that this version can be installed side by side with the previous version (Dolmen 1.3).
 
-### Dolmen 1.3 (stable version)
+### Dolmen 1.3 (legacy version)
 
 Dolmen 1.3 can be downloaded from [here](http://www.julieneychenne.info/dolmen/#download).
 
@@ -70,13 +69,13 @@ sudo apt-get install libasound2 libsndfile1 libspeexdsp1 libgtk2.0-0 qt5-default
 Next, assuming that you downloaded the archive in your `Downloads` directory, type the following commands in a terminal (replacing `XX` by the appropriate version number):
 
 ```
-tar xvjpf dolmen-XX-linux64.tar.bz2
-chmod +x dolmen/dolmen
-sudo mv dolmen/dolmen /usr/local/bin
-rm -r dolmen
+cd opt
+sudo tar xvjpf ~/Downloads/dolmen-XX-linux.tar.bz2
+sudo ln -s /opt/dolmen/bin/dolmen /usr/local/bin/
 ```
 
-You can now run Dolmen by simply typing `dolmen` from a terminal window.
+
+You can now run Dolmen by simply typing `dolmen &` from a terminal window.
 
 If you get an error about a missing SQL plugin, try to add the following line to your `.bashrc` configuration file:
 
@@ -91,7 +90,7 @@ You also need to manually build Qwt 6.1.0 (or later). Then, assuming that you ha
 you can compile it by typing the following commands in the terminal:
 
 ```
-unzip dolmen-1.3.zip
+unzip dolmen-2.0.zip
 cd dolmen
 qmake dolmen.pro; make
 ```
@@ -104,6 +103,7 @@ sudo mv dolmen /usr/local/bin/
 
 Assuming that `sudo` is installed and properly configured on your system. You can then run Dolmen by simply typing `dolmen` in the terminal. 
 
+In order to be able to read the documentation, you will also need to put the `html` directory somewhere on your disk, and adjust the `resources` path. To do this, go to `Edit > Preferences...` and in the `General` tab, adjust the path for the `Resources folder` to match your installation.
 
 ## Known issues
 

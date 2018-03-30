@@ -1,5 +1,9 @@
 ## Changelog for Dolmen
 
+### Version 2.0.0 (30/3/2018)
+
+* Fixed display of non-ASCII characters in Lua scripts
+
 ### Version 1.9.5 (30/3/2018)
 
 * Fixed a regression introduced in 1.9.4 which caused Dolmen to crash when there was no main plugin
