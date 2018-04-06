@@ -1,8 +1,6 @@
 # Dolmen: a platform for the analysis of annotated speech
 
 
-The source code is available on [GitHub](https://github.com/jeychenne/dolmen).
-
 ## Overview
 
 Dolmen is a free, open-source software toolbox for the analysis of annotated speech. It offers a user-friendly interface to manage, annotate and query language corpora. It is particularly well suited for dealing with time-aligned data. The main features it offers are: 
@@ -35,6 +33,12 @@ This version is recommended for all users.
 ### Dolmen 1.3 (legacy version)
 
 Dolmen 1.3 can be downloaded from [here](http://www.julieneychenne.info/dolmen/#download).
+
+
+### PFC plugin
+
+The plugin for the [PFC](http://wwww.projet-pfc.net) corpus which accompanies the book [Varieties of Spoken French](https://global.oup.com/academic/product/varieties-of-spoken-french-9780199573714?cc=kr&lang=en&) can be downloaded [here](http://julieneychenne.info/files/plugin-OUP.zip). The version of Dolmen which is available
+on the book's companion website is the legacy version: it is recommended that you upgrade to the current version.
 
 ## Installation
 
