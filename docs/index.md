@@ -27,7 +27,7 @@ This version is recommended for all users.
 - Windows 7 and later: [dolmen_setup.exe](http://julieneychenne.info/files/v2/dolmen_setup.exe)
 - MacOS 10.7 and later: [dolmen.dmg](http://julieneychenne.info/files/v2/dolmen.dmg)
 - Linux (Ubuntu 16.04 64-bit): [dolmen-2.0.0.tar.bz2](http://julieneychenne.info/files/v2/dolmen-2.0.0-linux.tar.bz2)
-- source code: available on [GitHub](https://github.com/jeychenne/dolmen/releases)
+- source code: available on [GitHub](https://github.com/jeychenne/dolmen-qt/releases)
 
 
 ### Dolmen 1.3 (legacy version)
