@@ -13,7 +13,7 @@ Dolmen is a free, open-source software toolbox for the analysis of annotated spe
 * Scripting engine: Dolmen can be extended with plugins written in Lua and JSON.
 
 Dolmen runs on all major platforms (Windows, Mac OS X and GNU/Linux) and is freely available under the terms of the GNU General Public License (GPL). 
-The latest version of Dolmen can be downloaded from [http://dolmen.rtfd.io](http://dolmen.rtfd.io). If you encounter any problem or bug, 
+The latest version of Dolmen can be downloaded from [http://www.dolmen-ling.org](http://www.dolmen-ling.org). If you encounter any problem or bug, 
 please write to jeychenne@gmail.com. 
 
 ## Download 
